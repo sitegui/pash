@@ -1,0 +1,21 @@
+CACHE MANIFEST
+
+# Pash
+# Version 1.5 - 27/11/2013
+# rv 17
+# Guilherme de Oliveira Souza
+# http://sitegui.com.br
+
+css.css
+icon.png
+layout.js
+pash.js
+Screens.js
+sha256.js
+controllers/change-master-key.js
+controllers/create-master-key.js
+controllers/credits.js
+controllers/generate.js
+controllers/how.js
+controllers/result.js
+controllers/welcome.js

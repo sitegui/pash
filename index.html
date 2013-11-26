@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html manifest="cache.appcache">
+<head>
+<meta charset="utf-8">
+<title>PASH - Probably Avoiding Severe Headaches</title>
+<meta name="viewport" content="width=450">
+<link rel="stylesheet" href="css.css">
+<link rel="icon" href="icon.png">
+<script src="sha256.js"></script>
+<script src="pash.js"></script>
+<script src="Screens.js"></script>
+<script src="controllers/welcome.js"></script>
+<script src="controllers/how.js"></script>
+<script src="controllers/create-master-key.js"></script>
+<script src="controllers/result.js"></script>
+<script src="controllers/change-master-key.js"></script>
+<script src="controllers/generate.js"></script>
+<script src="controllers/credits.js"></script>
+<script src="layout.js"></script>
+</head>
+
+<body>
+
+<div id="stage" class="stage">
+<div class="screen" id="screen-welcome">
+	<h1>Welcome to PASH</h1>
+	<p>Feeling guilty for using the <strong>same password</strong> for almost everything?</p>
+	<p>Secure your online life with different codes without having to remember all them!</p>
+	<div class="big-button" id="know-more-button">Know how</div>
+</div>
+
+<div class="screen" id="screen-how">
+	<h1>How PASH works</h1>
+	<p>PASH generates one unique password for each service you use. You just have to remember <strong>one</strong> key (your master key)</p>
+	<p>PASH uses very strong and stablished algorithms to hash your master key and the service name together to return the best password for you</p>
+	<div class="more-button" id="more-button">Tell me the details</div>
+	<div id="more-info" class="more-info">
+		<h2>Hashing</h2>
+		<p>PASH uses 4 inputs to generate each password:</p>
+		<ol>
+			<li>The user name (upper cased), to give more entropy for the master key</li>
+			<li>The user master key, expected to be a strong password by itself</li>
+			<li>The service name (upper cased), as spelled by the user</li>
+			<li>A color (among 9 options), to let the user change his password within the same service</li>
+		</ol>
+		<p>The first step is to hash all the inputs using SHA-256:</p>
+		<pre>SHA256(<br>&#9;SHA256(userName+"-"+userMasterKey) +<br>&#9;SHA256(serviceName+"-"+colorId)<br>)</pre>
+		<h2>Translating into a password</h2>
+		<p>The second step is to translate the 32-byte hash output into the final password. There are 3 different options for this process:</p>
+		<ul>
+			<li>Standard: creates a simple password, with letters and numbers, like <code>Trgpx622q7</code></li>
+			<li>Numeric: for credit cards, like <code>56778691</code></li>
+			<li>Strong: for critical applications, like servers, example: <code>V>SGq&amp;:&amp;3lka&lt;t</code></li>
+		</ul>
+	</div>
+	<h1>Retrieving your keys</h1>
+	<p>PASH does not store any critical data, so you can use it from any mobile or computer, no need to sign up or Internet connection</p>
+	<p>At any time you can retrieve the password for one of your services, just type in your master key</p>
+	<div class="big-button" id="check-for-yourself">Check for yourself</div>
+</div>
+
+<div class="screen" id="screen-create-master-key">
+	<h1>Choose your weapon</h1>
+	<p>Pick your best, strongest, password or take your time to think about a new one</p>
+	<p>This will be the only thing you'll have to remember: <strong>one password for you life</strong></p>
+	<div class="button" id="show-helper">Help me test my password strength</div>
+	<div class="more-info" id="helper">
+		<p>Your password: <input id="password" type="password"></p>
+		<div class="result" id="result-area">
+			<p id="result"></p>
+			<p id="hints" class="details"></p>
+		</div>
+	</div>
+	<div class="big-button" id="pash">I'm ready to PASH</div>
+</div>
+
+<div class="screen" id="screen-generate">
+	<h1>Let's PASH!</h1>
+	<form onSubmit="return false">
+	<table>
+		<tr>
+			<td><strong>Your first name</strong><br><span class="details">after all, this is your key</span></td>
+			<td><input id="userName" name="userName"></td>
+		</tr>
+		<tr>
+			<td><strong>Your ultra secure master key</strong><br><span class="details">don't use 1234, duh!<br><span class="button" id="get-help">let PASH help me with this</span></span></td>
+			<td><input id="masterKey" type="password" name="masterKey"></td>
+		</tr>
+		<tr>
+			<td><strong>The service name</strong><br><span class="details">like gmail or facebook</span></td>
+			<td>
+				<input id="serviceName" name="serviceName"><br>
+				<span id="saved-services">or<br>
+				<select id="selectServices">
+					<option disabled selected>Select from the history</option>
+					<option>Select other</option>
+				</select></span>
+			</td>
+		</tr>
+		<tr>
+			<td><strong>Choose a color</strong><br><span class="details">this lets you create more keys for the same service</span></td>
+			<td class="color-options" id="color-options">
+				<div class="color-option color-black" data-color-id="0" data-color="rgba(0, 0, 0, .4)"></div>
+				<div class="color-option color-gray" data-color-id="1" data-color="rgba(128, 128, 128, .4)"></div>
+				<div class="color-option color-brown" data-color-id="2" data-color="rgba(153, 102, 51, .4)"></div><br>
+				<div class="color-option color-red" data-color-id="3" data-color="rgba(255, 0, 0, .4)"></div>
+				<div class="color-option color-green" data-color-id="4" data-color="rgba(0, 255, 0, .4)"></div>
+				<div class="color-option color-blue" data-color-id="5" data-color="rgba(0, 0, 255, .4)"></div><br>
+				<div class="color-option color-yellow" data-color-id="6" data-color="rgba(255, 255, 0, .4)"></div>
+				<div class="color-option color-orange" data-color-id="7" data-color="rgba(255, 128, 0, .4)"></div>
+				<div class="color-option color-purple" data-color-id="8" data-color="rgba(255, 0, 255, .4)"></div>
+			</td>
+		</tr>
+	</table>
+	</form>
+	<div id="alert-area" class="alert" style="display:none"></div>
+	<div class="big-button" id="generate">Generate my key</div>
+	<div class="go-back" id="home">Home</div>
+    </form>
+</div>
+
+<div class="screen" id="screen-change-master-key">
+	<h1>Master key diverged</h1>
+	<p>The master key you used now doesn't seem to be the same you entered last time</p>
+	<p><div class="button" id="try-again">&lt; It was a typo, let me correct</div> or <div class="button" id="its-ok">I know, it's ok ></div></p>
+	<p><div class="more-button" id="info-button">How do you know it?</div></p>
+	<div class="more-info" id="info">
+		<p>Don't worry, PASH doesn't store your master key. It does store, however, the encoded hashed version of your master key.</p>
+		<p>The currently stored data is <code id="current"></code> and the possibly new one is <code id="new"></code></p>
+	</div>
+</div>
+
+<div class="screen" id="screen-result">
+	<h1>Generated password</h1>
+	<p><span id="name">$name</span>, here is your key for <span id="service">$service</span>:</p>
+	<div class="result" id="result">Your new key!</div>
+	<p>Feel free to come back at any time to get this password again, just remember the service name and color</p>
+	<div class="more-button" id="more-button">Change output format</div>
+	<div id="more-info">
+		<p><strong>Format</strong>:
+			<span class="option" id="decoder-standard" data-id="0">stardard</span>
+			<span class="option" id="decoder-numeric" data-id="1">only numbers</span>
+			<span class="option" id="decoder-strong" data-id="2">stronger</span>
+		</p>
+		<p><strong>Length</strong>:
+			<span class="option" id="length-short" data-id="1">short</span>
+			<span class="option" id="length-medium" data-id="2">medium</span>
+			<span class="option" id="length-long" data-id="3">long</span>
+		</p>
+	</div>
+	<div class="go-back" id="back">Back</div>
+</div>
+
+<div class="screen" id="screen-credits">
+	<h1>Credits</h1>
+	<p>Made by <a href="http://sitegui.com.br">Guilherme Souza</a></p>
+	<p>Thanks <a href="https://github.com/sitegui/pash">GitHub</a> for hosting the code and <a href="http://code.google.com/p/crypto-js/">CryptoJS</a> for the SHA-256 JavaScript implementation</p>
+	<p>Please <a href="http://sitegui.com.br/fale_conosco/?assunto=pash">get in touch</a> if you have any comments or wanna help translate or port the project for other plataforms</p>
+	<div class="go-back" id="home">Home</div>
+</div>
+
+<div class="stage-end"></div>
+</div>
+
+<footer>
+	<span class="clear-data button" id="clear-data">Clear all your data</span>
+	<span id="install-app" class="button">Install Firefox app</span>
+	<span class="credits button" id="credits">Credits</span>
+</footer>
+</body>
+</html>

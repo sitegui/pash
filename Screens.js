@@ -92,6 +92,7 @@ Screens._show = function (name, arg, backwards) {
 		}
 		
 		try {screen.controller.onbeforeshow.call(screen.controller, arg)} catch (e) {}
+		style.display = "block"
 		
 		// Calculate the height
 		height = screen.controller.el.clientHeight
@@ -136,6 +137,7 @@ Screens._hide = function (backwards) {
 				style.transition = "left 1s ease"
 				style.left = backwards ? "100%" : "-100%"
 				setTimeout(function () {
+					style.display = "none"
 					try {screen.controller.onafterhide.call(screen.controller)} catch (e) {}
 				}, 1e3)
 			}, 100)

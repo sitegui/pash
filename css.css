@@ -26,6 +26,7 @@ html {
 	top:25px;
 	width:90%;
 	left:100%;
+	display:none;
 }
 
 h1, h2 {
@@ -66,6 +67,7 @@ footer {
 	font-size:smaller;
 	padding:10px;
 	text-align:center;
+	margin-bottom:10px;
 }
 
 .credits {

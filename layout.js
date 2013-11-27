@@ -27,6 +27,9 @@ applicationCache.onupdateready = log("updateready")
 // Data saved into local storage
 var _data
 
+// Useful alias
+var _ = Lang.getString
+
 // Load saved data and start the application
 addEventListener("load", function () {
 	var resetData, request
@@ -49,7 +52,7 @@ addEventListener("load", function () {
 	else
 		_data = JSON.parse(_data)
 	if (_data.version != 1) {
-		alert("Could not open saved data, try updating this page.\nIf this problem persists, clear the browser cache")
+		alert(_("localStorageError"))
 		return
 	}
 	
@@ -57,7 +60,7 @@ addEventListener("load", function () {
 	
 	// Set footer buttons
 	document.getElementById("clear-data").onclick = function () {
-		if (confirm("This will clear all you saved data (your name and your services).\nAre you sure?")) {
+		if (confirm(_("confirmClearData"))) {
 			resetData()
 			location.reload(false)
 		}
@@ -80,7 +83,7 @@ addEventListener("load", function () {
 		if (navigator.mozApps)
 			navigator.mozApps.install("http://pash.sitegui.com.br/webapp.webapp")
 		else
-			alert("This function is only available in Firefox (Desktop or Android)")
+			alert(_("installError"))
 	}
 	
 	// Credits button

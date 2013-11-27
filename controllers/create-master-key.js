@@ -11,36 +11,36 @@ Screens.addController("create-master-key", {oninit: function () {
 		str = that.$("password").value
 		resultArea.style.backgroundColor = "rgba(0, 0, 0, .5)"
 		if (str.length < 4) {
-			resultSpan.textContent = "Your score will show here"
+			resultSpan.textContent = _("createMasterKey.score.empty")
 		} else if (str.length < 8) {
-			resultSpan.textContent = "Too short"
+			resultSpan.textContent = _("createMasterKey.score.short")
 			resultArea.style.backgroundColor = "rgba(255, 0, 0, .5)"
 		} else {
 			info = {}
 			score = measurePasswordStrength(str, info)
 			if (score < 10) {
-				resultSpan.textContent = "Weak. You know you can do better"
+				resultSpan.textContent = _("createMasterKey.score.weak")
 				resultArea.style.backgroundColor = "rgba(255, 0, 0, .5)"
 			} else if (score < 20) {
-				resultSpan.textContent = "That's ok, but try adding different characters"
+				resultSpan.textContent = _("createMasterKey.score.ok")
 				resultArea.style.backgroundColor = "rgba(255, 255, 0, .5)"
 			} else if (score < 30) {
-				resultSpan.textContent = "Perfect! This seems to be a great choise for your master key"
+				resultSpan.textContent = _("createMasterKey.score.great")
 				resultArea.style.backgroundColor = "rgba(0, 255, 0, .5)"
 			} else {
-				resultSpan.textContent = "Awesome, but it may be annoying to type this password everytime"
+				resultSpan.textContent = _("createMasterKey.score.awesome")
 				resultArea.style.backgroundColor = "rgba(0, 0, 255, .5)"
 			}
 			if (!info.hasDigits)
-				hints.push("use digits")
+				hints.push(_("createMasterKey.hints.digits"))
 			if (!info.hasLetters)
-				hints.push("use letters")
+				hints.push(_("createMasterKey.hints.letters"))
 			else if (!info.hasDifferentCases)
-				hints.push("use lower and upper cases")
+				hints.push(_("createMasterKey.hints.cases"))
 			if (!info.hasSymbols)
-				hints.push("try using some symbols (like space or commas)")
+				hints.push(_("createMasterKey.hints.symbols"))
 			if (hints.length)
-				hintsSpan.textContent = "May be you could "+hints.slice(0, 2).join(" and ")
+				hintsSpan.textContent = _("createMasterKey.hints.prefix")+hints.slice(0, 2).join(_("createMasterKey.hints.infix"))
 		}
 		that.updateHeight()
 	}

@@ -51,21 +51,21 @@ Screens.addController("generate", {oninit: function () {
 		masterKey = that.masterKey.value
 		serviceName = that.serviceName.value
 		if (!userName) {
-			that.alert("What's your name?")
+			that.alert(_("generate.alert.name"))
 			that.userName.focus()
 			return
 		}
 		if (masterKey.length < 8) {
-			that.alert("Master key too short, choose a good one!")
+			that.alert(_("generate.alert.masterKey"))
 			that.masterKey.focus()
 			return
 		}
 		if (!serviceName) {
-			that.alert("Type in the service name")
+			that.alert(_("generate.alert.service"))
 			return
 		}
 		if (!that.selectedColor) {
-			that.alert("Please select one color")
+			that.alert(_("generate.alert.color"))
 			return
 		}
 		color = that.selectedColor.dataset.color
@@ -159,7 +159,7 @@ Screens.addController("generate", {oninit: function () {
 		colorNames = ["black", "gray", "brown", "red", "green", "blue", "yellow", "orange", "purple"]
 		if (leastUsed.length) {
 			group = document.createElement("optgroup")
-			group.label = "Most used"
+			group.label = _("generate.mostUsed")
 			this.selectServices.appendChild(group)
 		} else
 			group = this.selectServices
@@ -172,7 +172,7 @@ Screens.addController("generate", {oninit: function () {
 		})
 		if (leastUsed.length) {
 			group = document.createElement("optgroup")
-			group.label = "Least used"
+			group.label = _("generate.leastUsed")
 			this.selectServices.appendChild(group)
 			leastUsed.forEach(function (service) {
 				var option = document.createElement("option")

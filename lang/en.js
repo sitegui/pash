@@ -44,7 +44,23 @@ Lang.addPack({
 			line2: "This will be the only thing you'll have to remember: <strong>one password for you life</strong>",
 			help: "Help me test my password strength",
 			password: "Your password: ",
-			pash: "I'm ready to PASH"
+			pash: "I'm ready to PASH",
+			score: {
+				empty: "Your score will show here",
+				short: "Too short",
+				weak: "Weak. You know you can do better",
+				ok: "That's ok, but try adding different characters",
+				great: "Perfect! This seems to be a great choise for your master key",
+				awesome: "Awesome, but it may be annoying to type this password everytime"
+			},
+			hints: {
+				digits: "use digits",
+				letters: "use letters",
+				cases: "use lower and upper cases",
+				symbols: "try using some symbols (like space or commas)",
+				prefix: "May be you could ",
+				infix: " and "
+			}
 		},
 		generate: {
 			title: "Let's PASH!",
@@ -61,7 +77,15 @@ Lang.addPack({
 			color: "Choose a color",
 			colorDetails: "this lets you create more keys for the same service",
 			generate: "Generate my key",
-			home: "Home"
+			home: "Home",
+			alert: {
+				name: "What's your name?",
+				masterKey: "Master key too short, choose a good one!",
+				service: "Type in the service name",
+				color: "Please select one color"
+			},
+			mostUsed: "Most used",
+			leastUsed: "Least used"
 		},
 		changeMasterKey: {
 			title: "Master key diverged",
@@ -100,6 +124,9 @@ Lang.addPack({
 		},
 		clear: "Clear all your data",
 		install: "Install Firefox app",
-		about: "Credits"
+		about: "Credits",
+		localStorageError: "Could not open saved data, try updating this page.\nIf this problem persists, clear the browser cache",
+		confirmClearData: "This will clear all you saved data (your name and your services).\nAre you sure?",
+		installError: "This function is only available in Firefox (Desktop or Android)"
 	}
 })

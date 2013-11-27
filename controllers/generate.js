@@ -39,6 +39,10 @@ Screens.addController("generate", {oninit: function () {
 	this.$("get-help").onclick = function () {
 		Screens.show("create-master-key", true)
 	}
+	this.$("form").onsubmit = function (event) {
+		event.preventDefault()
+		that.$("generate").click()
+	}
 	this.$("generate").onclick = function () {
 		var userName, masterKey, serviceName, colorId, color, raw, i, service, hashedMasterKey, mayBeWrong, resultData
 		

@@ -31,6 +31,8 @@ var _data
 addEventListener("load", function () {
 	var resetData, request
 	
+	Lang.init()
+	
 	// Take care of the previously saved data
 	_data = localStorage.getItem("pash-data")
 	resetData = function () {

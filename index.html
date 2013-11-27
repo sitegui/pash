@@ -16,6 +16,9 @@
 <script src="controllers/change-master-key.js"></script>
 <script src="controllers/generate.js"></script>
 <script src="controllers/credits.js"></script>
+<script src="lang/Lang.js"></script>
+<script src="lang/en.js"></script>
+<script src="lang/pt-br.js"></script>
 <script src="layout.js"></script>
 </head>
 
@@ -23,82 +26,82 @@
 
 <div id="stage" class="stage">
 <div class="screen" id="screen-welcome">
-	<h1>Welcome to PASH</h1>
-	<p>Feeling guilty for using the <strong>same password</strong> for almost everything?</p>
-	<p>Secure your online life with different codes without having to remember all them!</p>
-	<div class="big-button" id="know-more-button">Know how</div>
+	<h1>[[welcome.title]]</h1>
+	<p>[[welcome.line1]]</p>
+	<p>[[welcome.line2]]</p>
+	<div class="big-button" id="know-more-button">[[welcome.knowHow]]</div>
 </div>
 
 <div class="screen" id="screen-how">
-	<h1>How PASH works</h1>
-	<p>PASH generates one unique password for each service you use. You just have to remember <strong>one</strong> key (your master key)</p>
-	<p>PASH uses very strong and stablished algorithms to hash your master key and the service name together to return the best password for you</p>
-	<div class="more-button" id="more-button">Tell me the details</div>
+	<h1>[[how.title]]</h1>
+	<p>[[how.line1]]</p>
+	<p>[[how.line2]]</p>
+	<div class="more-button" id="more-button">[[how.details]]</div>
 	<div id="more-info" class="more-info">
-		<h2>Hashing</h2>
-		<p>PASH uses 4 inputs to generate each password:</p>
+		<h2>[[how.hashing.title]]</h2>
+		<p>[[how.hashing.line1]]</p>
 		<ol>
-			<li>The user name (upper cased), to give more entropy for the master key</li>
-			<li>The user master key, expected to be a strong password by itself</li>
-			<li>The service name (upper cased), as spelled by the user</li>
-			<li>A color (among 9 options), to let the user change his password within the same service</li>
+			<li>[[how.hashing.item1]]</li>
+			<li>[[how.hashing.item2]]</li>
+			<li>[[how.hashing.item3]]</li>
+			<li>[[how.hashing.item4]]</li>
 		</ol>
-		<p>The first step is to hash all the inputs using SHA-256:</p>
-		<pre>SHA256(<br>&#9;SHA256(userName+"-"+userMasterKey) +<br>&#9;SHA256(serviceName+"-"+colorId)<br>)</pre>
-		<h2>Translating into a password</h2>
-		<p>The second step is to translate the 32-byte hash output into the final password. There are 3 different options for this process:</p>
+		<p>[[how.hashing.line2]]</p>
+		<pre>[[how.hashing.code]]</pre>
+		<h2>[[how.translating.title]]</h2>
+		<p>[[how.translating.line1]]</p>
 		<ul>
-			<li>Standard: creates a simple password, with letters and numbers, like <code>Trgpx622q7</code></li>
-			<li>Numeric: for credit cards, like <code>56778691</code></li>
-			<li>Strong: for critical applications, like servers, example: <code>V>SGq&amp;:&amp;3lka&lt;t</code></li>
+			<li>[[how.translating.item1]]</li>
+			<li>[[how.translating.item2]]</li>
+			<li>[[how.translating.item3]]</li>
 		</ul>
 	</div>
-	<h1>Retrieving your keys</h1>
-	<p>PASH does not store any critical data, so you can use it from any mobile or computer, no need to sign up or Internet connection</p>
-	<p>At any time you can retrieve the password for one of your services, just type in your master key</p>
-	<div class="big-button" id="check-for-yourself">Check for yourself</div>
+	<h1>[[how.retrieving.title]]</h1>
+	<p>[[how.retrieving.line1]]</p>
+	<p>[[how.retrieving.line2]]</p>
+	<div class="big-button" id="check-for-yourself">[[how.checkYourself]]</div>
 </div>
 
 <div class="screen" id="screen-create-master-key">
-	<h1>Choose your weapon</h1>
-	<p>Pick your best, strongest, password or take your time to think about a new one</p>
-	<p>This will be the only thing you'll have to remember: <strong>one password for you life</strong></p>
-	<div class="button" id="show-helper">Help me test my password strength</div>
+	<h1>[[createMasterKey.title]]</h1>
+	<p>[[createMasterKey.line1]]</p>
+	<p>[[createMasterKey.line2]]</p>
+	<div class="button" id="show-helper">[[createMasterKey.help]]</div>
 	<div class="more-info" id="helper">
-		<p>Your password: <input id="password" type="password"></p>
+		<p><span>[[createMasterKey.password]]</span><input id="password" type="password"></p>
 		<div class="result" id="result-area">
 			<p id="result"></p>
 			<p id="hints" class="details"></p>
 		</div>
 	</div>
-	<div class="big-button" id="pash">I'm ready to PASH</div>
+	<div class="big-button" id="pash">[[createMasterKey.pash]]</div>
 </div>
 
 <div class="screen" id="screen-generate">
-	<h1>Let's PASH!</h1>
-	<form onSubmit="return false">
+	<h1>[[generate.title]]</h1>
+	<form id="form">
 	<table>
 		<tr>
-			<td><strong>Your first name</strong><br><span class="details">after all, this is your key</span></td>
+			<td><strong>[[generate.name]]</strong><br><span class="details">[[generate.nameDetails]]</span></td>
 			<td><input id="userName" name="userName"></td>
 		</tr>
 		<tr>
-			<td><strong>Your ultra secure master key</strong><br><span class="details">don't use 1234, duh!<br><span class="button" id="get-help">let PASH help me with this</span></span></td>
+			<td><strong>[[generate.masterKey]]</strong><br><span class="details"><span>[[generate.masterKeyDetails]]</span><br><span class="button" id="get-help">[[generate.getHelp]]</span></span></td>
 			<td><input id="masterKey" type="password" name="masterKey"></td>
 		</tr>
 		<tr>
-			<td><strong>The service name</strong><br><span class="details">like gmail or facebook</span></td>
+			<td><strong>[[generate.service]]</strong><br><span class="details">[[generate.serviceDetails]]</span></td>
 			<td>
 				<input id="serviceName" name="serviceName"><br>
-				<span id="saved-services">or<br>
+				<span id="saved-services"><span>[[generate.or]]</span><br>
 				<select id="selectServices">
-					<option disabled selected>Select from the history</option>
-					<option>Select other</option>
+					<option disabled selected>[[generate.history]]</option>
+					<option>[[generate.select]]</option>
 				</select></span>
 			</td>
 		</tr>
 		<tr>
-			<td><strong>Choose a color</strong><br><span class="details">this lets you create more keys for the same service</span></td>
+			<td><strong>[[generate.color]]</strong><br><span class="details">[[generate.colorDetails]]</span></td>
 			<td class="color-options" id="color-options">
 				<div class="color-option color-black" data-color-id="0" data-color="rgba(0, 0, 0, .4)"></div>
 				<div class="color-option color-gray" data-color-id="1" data-color="rgba(128, 128, 128, .4)"></div>
@@ -114,58 +117,58 @@
 	</table>
 	</form>
 	<div id="alert-area" class="alert" style="display:none"></div>
-	<div class="big-button" id="generate">Generate my key</div>
-	<div class="go-back" id="home">Home</div>
+	<div class="big-button" id="generate">[[generate.generate]]</div>
+	<div class="go-back" id="home">[[generate.home]]</div>
     </form>
 </div>
 
 <div class="screen" id="screen-change-master-key">
-	<h1>Master key diverged</h1>
-	<p>The master key you used now doesn't seem to be the same you entered last time</p>
-	<p><div class="button" id="try-again">&lt; It was a typo, let me correct</div> or <div class="button" id="its-ok">I know, it's ok ></div></p>
-	<p><div class="more-button" id="info-button">How do you know it?</div></p>
+	<h1>[[changeMasterKey.title]]</h1>
+	<p>[[changeMasterKey.line1]]</p>
+	<p><div class="button" id="try-again">[[changeMasterKey.tryAgain]]</div>[[changeMasterKey.or]]<div class="button" id="its-ok">[[changeMasterKey.ok]]</div></p>
+	<p><div class="more-button" id="info-button">[[changeMasterKey.how]]</div></p>
 	<div class="more-info" id="info">
-		<p>Don't worry, PASH doesn't store your master key. It does store, however, the encoded hashed version of your master key.</p>
-		<p>The currently stored data is <code id="current"></code> and the possibly new one is <code id="new"></code></p>
+		<p>[[changeMasterKey.info.line1]]</p>
+		<p><span>[[changeMasterKey.info.line2A]]</span><code id="current"></code><span>[[changeMasterKey.info.line2B]]</span><code id="new"></code></p>
 	</div>
 </div>
 
 <div class="screen" id="screen-result">
-	<h1>Generated password</h1>
-	<p><span id="name">$name</span>, here is your key for <span id="service">$service</span>:</p>
-	<div class="result" id="result">Your new key!</div>
-	<p>Feel free to come back at any time to get this password again, just remember the service name and color</p>
-	<div class="more-button" id="more-button">Change output format</div>
+	<h1>[[result.title]]</h1>
+	<p>[[result.line1]]</p>
+	<div class="result" id="result"></div>
+	<p>[[result.line2]]</p>
+	<div class="more-button" id="more-button">[[result.changeFormat]]</div>
 	<div id="more-info">
-		<p><strong>Format</strong>:
-			<span class="option" id="decoder-standard" data-id="0">stardard</span>
-			<span class="option" id="decoder-numeric" data-id="1">only numbers</span>
-			<span class="option" id="decoder-strong" data-id="2">stronger</span>
+		<p><strong>[[result.format]]</strong>:
+			<span class="option" id="decoder-standard" data-id="0">[[result.standard]]</span>
+			<span class="option" id="decoder-numeric" data-id="1">[[result.numeric]]</span>
+			<span class="option" id="decoder-strong" data-id="2">[[result.stronger]]</span>
 		</p>
-		<p><strong>Length</strong>:
-			<span class="option" id="length-short" data-id="1">short</span>
-			<span class="option" id="length-medium" data-id="2">medium</span>
-			<span class="option" id="length-long" data-id="3">long</span>
+		<p><strong>[[result.length]]</strong>:
+			<span class="option" id="length-short" data-id="1">[[result.short]]</span>
+			<span class="option" id="length-medium" data-id="2">[[result.medium]]</span>
+			<span class="option" id="length-long" data-id="3">[[result.long]]</span>
 		</p>
 	</div>
-	<div class="go-back" id="back">Back</div>
+	<div class="go-back" id="back">[[result.back]]</div>
 </div>
 
 <div class="screen" id="screen-credits">
-	<h1>Credits</h1>
-	<p>Made by <a href="http://sitegui.com.br">Guilherme Souza</a></p>
-	<p>Thanks <a href="https://github.com/sitegui/pash">GitHub</a> for hosting the code and <a href="http://code.google.com/p/crypto-js/">CryptoJS</a> for the SHA-256 JavaScript implementation</p>
-	<p>Please <a href="http://sitegui.com.br/fale_conosco/?assunto=pash">get in touch</a> if you have any comments or wanna help translate or port the project for other plataforms</p>
-	<div class="go-back" id="home">Home</div>
+	<h1>[[credits.title]]</h1>
+	<p>[[credits.line1]]</p>
+	<p>[[credits.line2]]</p>
+	<p>[[credits.line3]]</p>
+	<div class="go-back" id="home">[[credits.home]]</div>
 </div>
 
 <div class="stage-end"></div>
 </div>
 
 <footer>
-	<span class="clear-data button" id="clear-data">Clear all your data</span>
-	<span id="install-app" class="button">Install Firefox app</span>
-	<span class="credits button" id="credits">Credits</span>
+	<span class="clear-data button" id="clear-data">[[clear]]</span>
+	<span id="install-app" class="button">[[install]]</span>
+	<span class="credits button" id="credits">[[about]]</span>
 </footer>
 </body>
 </html>

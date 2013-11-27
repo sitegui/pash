@@ -2,7 +2,7 @@ CACHE MANIFEST
 
 # Pash
 # Version 1.5 - 27/11/2013
-# rv 19
+# rv 33
 # Guilherme de Oliveira Souza
 # http://sitegui.com.br
 
@@ -19,3 +19,6 @@ controllers/generate.js
 controllers/how.js
 controllers/result.js
 controllers/welcome.js
+lang/en.js
+lang/Lang.js
+lang/pt-br.js

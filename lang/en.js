@@ -27,7 +27,7 @@ Lang.addPack({
 			translating: {
 				title: "Translating into a password",
 				line1: "The second step is to translate the 32-byte hash output into the final password. There are 3 different options for this process:",
-				item1: "Standard: creates a simple password, with letters and numbers, like <code>Trgpx622q7</code>Numeric: for credit cards, like <code>56778691</code>",
+				item1: "Standard: creates a simple password, with letters and numbers, like <code>Trgpx622q7</code>",
 				item2: "Numeric: for credit cards, like <code>56778691</code>",
 				item3: "Strong: for critical applications, like servers, example: <code>V>SGq&amp;:&amp;3lka&lt;t</code>"
 			},
@@ -73,7 +73,6 @@ Lang.addPack({
 			serviceDetails: "like gmail or facebook",
 			or: "or",
 			history: "Select from the history",
-			select: "Select other",
 			color: "Choose a color",
 			colorDetails: "this lets you create more keys for the same service",
 			generate: "Generate my key",

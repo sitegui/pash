@@ -6,6 +6,6 @@
 	"developer": {"name": "Guilherme Souza", "url": "http://sitegui.com.br"},
 	"icons": {"128": "/icon128.png", "60": "/icon60.png"},
 	"launch_path": "/",
-	"version": "1.6",
+	"version": "1.7",
 	"orientation": ["landscape"]
 }

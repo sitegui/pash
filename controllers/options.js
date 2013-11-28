@@ -1,6 +1,6 @@
 Screens.addController("options", {oninit: function () {
 	this.$("home").onclick = function () {
-		Screens.show("welcome", true)
+		Screens.show("generate", true)
 	}
 	
 	// Set footer buttons

@@ -122,11 +122,19 @@ Lang.addPack({
 			line3: "Please <a href=\"http://sitegui.com.br/fale_conosco/?assunto=pash\">get in touch</a> if you have any comments or wanna help translate or port the project for other plataforms",
 			home: "Home"
 		},
-		clear: "Clear all your data",
-		install: "Install Firefox app",
-		about: "Credits",
-		localStorageError: "Could not open saved data, try updating this page.\nIf this problem persists, clear the browser cache",
-		confirmClearData: "This will clear all you saved data (your name and your services).\nAre you sure?",
-		installError: "This function is only available in Firefox (Desktop or Android)"
+		options: {
+			title: "Options",
+			home: "Home",
+			install: "Install Firefox app",
+			clear: "Clear all my data",
+			confirmClear: "This will clear all you saved data (your name and your services).\nAre you sure?",
+			installError: "This function is only available in Firefox (Desktop or Android)",
+			language: "Language: "
+		},
+		update: {
+			text: "New version available",
+			button: "Update now"
+		},
+		localStorageError: "Could not open saved data, try updating this page.\nIf this problem persists, clear the browser cache"
 	}
 })

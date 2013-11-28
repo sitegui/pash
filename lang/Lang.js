@@ -10,7 +10,7 @@ Lang.localStorageKey = "pash-lang"
 // pack.isDefault indicates this pack should be used if the auto-detect fails
 // pack.strings is <TODO>
 Lang.addPack = function (pack) {
-	Lang._packs[pack.tag] = pack
+	Lang._packs[pack.tag.toLowerCase()] = pack
 	if (pack.isDefault)
 		Lang._defaultPack = pack
 }
@@ -37,16 +37,41 @@ Lang.getString = function (key) {
 	return context
 }
 
+// Return an array with the names of all registered language packs
+// Every element is an object with the keys "name" and "tag"
+Lang.getPackNames = function () {
+	var i, r = []
+	for (i in Lang._packs)
+		r.push({name: Lang._packs[i].name, tag: Lang._packs[i].tag})
+	return r
+}
+
+// Change the language
+// A pack with the given tag must have been already registered
+// Save the value in localStorage
+Lang.setLanguage = function (tag) {
+	tag = tag.toLowerCase()
+	if (!(tag in Lang._packs))
+		throw new Error("Language pack "+tag+" not found")
+	localStorage.setItem(Lang.localStorageKey, tag)
+	Lang._pack = Lang._packs[tag]
+}
+
+// Return the current language tag
+Lang.getCurrentTag = function () {
+	return Lang._pack.tag
+}
+
 // Start the lang module, must be called on window load event
 // Call it before changing the initial DOM
 Lang.init = function () {
 	var langTag, packName, saved, replaceStrings
-	langTag = navigator.language || navigator.userLanguage
+	langTag = (navigator.language || navigator.userLanguage).toLowerCase()
 	
 	// Try to get from a saved preference
 	saved = localStorage.getItem(Lang.localStorageKey)
 	if (saved)
-		Lang._pack = Lang._packs[saved]
+		Lang._pack = Lang._packs[saved.toLowerCase()]
 	
 	// Try to find an exact match
 	if (!Lang._pack && Lang._packs[langTag])
@@ -63,7 +88,8 @@ Lang.init = function () {
 	}
 	
 	// Use default fallback
-	Lang._pack = Lang._defaultPack
+	if (!Lang._pack)
+		Lang._pack = Lang._defaultPack
 	
 	// Run the DOM, replacing strings
 	replaceStrings = function (el) {

@@ -2,6 +2,7 @@ CACHE MANIFEST
 
 # Pash
 # Version 1.6 - 27/11/2013
+# rv 17
 # Guilherme de Oliveira Souza
 # http://sitegui.com.br
 
@@ -16,6 +17,7 @@ controllers/create-master-key.js
 controllers/credits.js
 controllers/generate.js
 controllers/how.js
+controllers/options.js
 controllers/result.js
 controllers/welcome.js
 lang/en.js

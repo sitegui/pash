@@ -16,6 +16,7 @@
 <script src="controllers/change-master-key.js"></script>
 <script src="controllers/generate.js"></script>
 <script src="controllers/credits.js"></script>
+<script src="controllers/options.js"></script>
 <script src="lang/Lang.js"></script>
 <script src="lang/en.js"></script>
 <script src="lang/pt-br.js"></script>
@@ -163,13 +164,24 @@
 	<div class="go-back" id="home">[[credits.home]]</div>
 </div>
 
-<div class="stage-end"></div>
+<div class="screen" id="screen-options">
+	<h1>[[options.title]]</h1>
+	<p class="button" id="install">[[options.install]]</p>
+	<p class="button" id="clear">[[options.clear]]</p>
+	<p><span>[[options.language]]</span><select id="language"></select></p>
+	<div class="go-back" id="home">[[options.home]]</div>
+</div>
+
+</div>
+
+<div id="update-alert" class="update-alert">
+	<span>[[update.text]]</span><br>
+	<span id="update" class="button">[[update.button]]</span>
 </div>
 
 <footer>
-	<span class="clear-data button" id="clear-data">[[clear]]</span>
-	<span id="install-app" class="button">[[install]]</span>
-	<span class="credits button" id="credits">[[about]]</span>
+	<span class="button" id="credits">[[credits.title]]</span>
+	<span class="options button" id="options">[[options.title]]</span>
 </footer>
 </body>
 </html>

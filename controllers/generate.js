@@ -84,7 +84,7 @@ Screens.addController("generate", {oninit: function () {
 		mayBeWrong = false
 		if (i == _data.services.length) {
 			hashedMasterKey = applyStrongDecoder(CryptoJS.SHA256(masterKey), PASH_LENGTH_LONG)
-			service = {name: serviceName, color: color, hitCount: 1, encoder: PASH_DECODER_STANDARD, length: PASH_LENGTH_MEDIUM}
+			service = {name: serviceName, color: color, hitCount: 1, decoder: PASH_DECODER_STANDARD, length: PASH_LENGTH_MEDIUM}
 			
 			// Compare the used key with the previous
 			if (_data.lastUsedMasterKeyHashed)

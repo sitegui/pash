@@ -84,7 +84,7 @@ Screens.addController("result", {oninit: function () {
 	// Display timeout (for security reasons)
 	this.interval = setTimeout(function () {
 		Screens.show("generate", null, true)
-	}, 6e3)
+	}, 60e3)
 }, onbeforehide: function () {
 	clearTimeout(this.interval)
 }, onafterhide: function () {

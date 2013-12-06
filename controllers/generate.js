@@ -5,7 +5,7 @@ Screens.addController("generate", {oninit: function () {
 	Object.defineProperty(this, "selectedColor", {get: function () {
 		return _selectedColor
 	}, set: function (value) {
-		that.$("color-options").style.backgroundColor = value ? value.dataset.color : ""
+		that.$("color-options").style.backgroundColor = value ? value.dataset.cssColor : ""
 		if (_selectedColor)
 			_selectedColor.classList.remove("color-option-selected")
 		if (value)
@@ -32,7 +32,7 @@ Screens.addController("generate", {oninit: function () {
 	this.selectServices.onchange = function () {
 		var selected = this.options[this.selectedIndex]
 		that.serviceName.value = selected.dataset.name
-		that.selectedColor = that.el.querySelectorAll(".color-option")[selected.dataset.colorId]
+		that.selectedColor = that.$(selected.dataset.color)
 		this.selectedIndex = 0
 		that.$("generate").click()
 	}
@@ -44,7 +44,7 @@ Screens.addController("generate", {oninit: function () {
 		that.$("generate").click()
 	}
 	this.$("generate").onclick = function () {
-		var userName, masterKey, serviceName, colorId, color, raw, i, service, hashedMasterKey, mayBeWrong, resultData
+		var userName, masterKey, serviceName, cssColor, color, raw, i, service, hashedMasterKey, mayBeWrong, resultData
 		
 		// Validate
 		userName = that.userName.value
@@ -68,15 +68,15 @@ Screens.addController("generate", {oninit: function () {
 			that.alert(_("generate.alert.color"))
 			return
 		}
-		color = that.selectedColor.dataset.color
-		colorId = that.selectedColor.dataset.colorId
+		cssColor = that.selectedColor.dataset.cssColor
+		color = that.selectedColor.id
 		
 		// Save the data
-		raw = generateRawPassword(userName, masterKey, serviceName, colorId)
+		raw = generateRawPassword(userName, masterKey, serviceName, color)
 		_data.userName = userName
 		for (i=0; i<_data.services.length; i++) {
 			service = _data.services[i]
-			if (service.name.toUpperCase() == serviceName.toUpperCase() && service.colorId == colorId) {
+			if (service.name.toUpperCase() == serviceName.toUpperCase() && service.color == color) {
 				service.hitCount++
 				break
 			}
@@ -84,7 +84,7 @@ Screens.addController("generate", {oninit: function () {
 		mayBeWrong = false
 		if (i == _data.services.length) {
 			hashedMasterKey = applyStrongDecoder(CryptoJS.SHA256(masterKey), PASH_LENGTH_LONG)
-			service = {name: serviceName, colorId: Number(colorId), hitCount: 1, encoder: PASH_DECODER_STANDARD, length: PASH_LENGTH_MEDIUM}
+			service = {name: serviceName, color: color, hitCount: 1, encoder: PASH_DECODER_STANDARD, length: PASH_LENGTH_MEDIUM}
 			
 			// Compare the used key with the previous
 			if (_data.lastUsedMasterKeyHashed)
@@ -93,12 +93,12 @@ Screens.addController("generate", {oninit: function () {
 				_data.lastUsedMasterKeyHashed = hashedMasterKey
 			
 			if (!mayBeWrong)
-			_data.services.push(service)
+				_data.services.push(service)
 		}
 		saveData()
 		
 		// Create the raw pack
-		resultData = {raw: raw, userName: userName, service: service, color: color}
+		resultData = {raw: raw, userName: userName, service: service, cssColor: cssColor}
 		if (mayBeWrong)
 			Screens.show("change-master-key", {resultData: resultData, hashedMasterKey: hashedMasterKey, service: service})
 		else
@@ -116,10 +116,10 @@ Screens.addController("generate", {oninit: function () {
 		el.onclick = colorClick
 	})
 }, onbeforeshow: function (obj) {
-	var group, colorNames, totalHitCount, that = this, acumulator, mostUsed, leastUsed, i
+	var group, totalHitCount, that = this, acumulator, mostUsed, leastUsed, i
 	
 	// Reset service fields
-	this.selectedColor = obj ? this.el.querySelectorAll(".color-option")[obj.colorId] : null
+	this.selectedColor = obj ? this.$(obj.color) : null
 	this.serviceName.value = obj ? obj.serviceName : ""
 	
 	// Populate the saved services choose box
@@ -156,7 +156,6 @@ Screens.addController("generate", {oninit: function () {
 		})
 		
 		// Create the elements
-		colorNames = ["black", "gray", "brown", "red", "green", "blue", "yellow", "orange", "purple"]
 		if (leastUsed.length) {
 			group = document.createElement("optgroup")
 			group.label = _("generate.mostUsed")
@@ -165,9 +164,9 @@ Screens.addController("generate", {oninit: function () {
 			group = this.selectServices
 		mostUsed.forEach(function (service) {
 			var option = document.createElement("option")
-			option.textContent = service.name+" - "+colorNames[service.colorId]
+			option.textContent = service.name+" - "+_("generate.color."+service.color)
 			option.dataset.name = service.name
-			option.dataset.colorId = service.colorId
+			option.dataset.color = service.color
 			group.appendChild(option)
 		})
 		if (leastUsed.length) {
@@ -176,9 +175,9 @@ Screens.addController("generate", {oninit: function () {
 			this.selectServices.appendChild(group)
 			leastUsed.forEach(function (service) {
 				var option = document.createElement("option")
-				option.textContent = service.name+" - "+colorNames[service.colorId]
+				option.textContent = service.name+" - "+_("generate.color."+service.color)
 				option.dataset.name = service.name
-				option.dataset.colorId = service.colorId
+				option.dataset.color = service.color
 				group.appendChild(option)
 			})
 		}

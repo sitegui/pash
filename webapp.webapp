@@ -5,7 +5,7 @@
 	"default_locale": "en",
 	"developer": {"name": "Guilherme Souza", "url": "http://sitegui.com.br"},
 	"icons": {"128": "/icon128.png", "60": "/icon60.png"},
-	"launch_path": "/",
-	"version": "1.7",
+	"launch_path": "/index.html",
+	"version": "1.8",
 	"orientation": ["landscape"]
 }

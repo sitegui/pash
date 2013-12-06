@@ -5,15 +5,12 @@ Public interface
 */
 
 // Color constants
-var PASH_COLOR_BLACK = "0"
-var PASH_COLOR_GRAY = "1"
-var PASH_COLOR_BROWN = "2"
-var PASH_COLOR_RED = "3"
-var PASH_COLOR_GREEN = "4"
-var PASH_COLOR_BLUE = "5"
-var PASH_COLOR_YELLOW = "6"
-var PASH_COLOR_ORANGE = "7"
-var PASH_COLOR_PURPLE = "8"
+var PASH_COLOR_RED = "red"
+var PASH_COLOR_GREEN = "green"
+var PASH_COLOR_BLUE = "blue"
+var PASH_COLOR_YELLOW = "yellow"
+var PASH_COLOR_ORANGE = "orange"
+var PASH_COLOR_PURPLE = "purple"
 
 // Length constants
 var PASH_LENGTH_SHORT = 1
@@ -66,7 +63,7 @@ function generateRawPassword(userName, masterPassword, serviceName, color) {
 // Calculate how strong is a given password
 // Return a positive number
 // In general, scores less than 11 are bad and above 20 are really good
-// info (option) is an object that will be populated with aditional feedback
+// info (optional) is an object that will be populated with aditional feedback
 // info will have these keys: hasDigits, hasLetters, hasDifferentCases, hasSymbols
 function measurePasswordStrength(str, info) {
 	var i, c

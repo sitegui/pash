@@ -1,7 +1,7 @@
 Screens.addController("change-master-key", {oninit: function () {
 	var that = this
 	this.$("try-again").onclick = function () {
-		var data = {serviceName: that.serviceData.name, colorId: that.serviceData.colorId}
+		var data = {serviceName: that.serviceData.name, color: that.serviceData.color}
 		Screens.show("generate", data, true)
 	}
 	this.$("its-ok").onclick = function () {

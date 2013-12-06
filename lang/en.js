@@ -73,7 +73,6 @@ Lang.addPack({
 			serviceDetails: "like gmail or facebook",
 			or: "or",
 			history: "Select from the history",
-			color: "Choose a color",
 			colorDetails: "this lets you create more keys for the same service",
 			generate: "Generate my key",
 			home: "Home",
@@ -84,7 +83,16 @@ Lang.addPack({
 				color: "Please select one color"
 			},
 			mostUsed: "Most used",
-			leastUsed: "Least used"
+			leastUsed: "Least used",
+			color: {
+				title: "Choose a color",
+				red: "red",
+				green: "green",
+				blue: "blue",
+				yellow: "yellow",
+				orange: "orange",
+				purple: "purple"
+			}
 		},
 		changeMasterKey: {
 			title: "Master key diverged",

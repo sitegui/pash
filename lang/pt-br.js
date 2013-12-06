@@ -72,7 +72,6 @@ Lang.addPack({
 			serviceDetails: "gmail, facebook, etc",
 			or: "ou",
 			history: "Selecione do histórico",
-			color: "Escolha uma cor",
 			colorDetails: "isso permite criar mais de uma senha pro mesmo serviço",
 			generate: "Gerar minha senha",
 			home: "Início",
@@ -83,7 +82,16 @@ Lang.addPack({
 				color: "Por favor, escolha uma cor"
 			},
 			mostUsed: "Mais usado",
-			leastUsed: "Menos usado"
+			leastUsed: "Menos usado",
+			color: {
+				title: "Escolha uma cor",
+				red: "vermelho",
+				green: "verde",
+				blue: "azul",
+				yellow: "amarelo",
+				orange: "laranja",
+				purple: "roxo"
+			}
 		},
 		changeMasterKey: {
 			title: "Senha mestre diferente",

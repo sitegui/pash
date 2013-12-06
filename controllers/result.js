@@ -76,10 +76,17 @@ Screens.addController("result", {oninit: function () {
 	// Populate the interface
 	this.$("name").textContent = data.userName
 	this.$("service").textContent = data.service.name
-	this.$("result").style.backgroundColor = data.color
+	this.$("result").style.backgroundColor = data.cssColor
 	this.$("more-info").style.display = "none"
 	this.$("more-button").style.display = ""
 	this.updateResult()
+	
+	// Display timeout (for security reasons)
+	this.interval = setTimeout(function () {
+		Screens.show("generate", null, true)
+	}, 6e3)
+}, onbeforehide: function () {
+	clearTimeout(this.interval)
 }, onafterhide: function () {
 	this.serviceData = null
 	this.raw = null

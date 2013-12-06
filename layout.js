@@ -19,7 +19,7 @@ function resetData () {
 	_data = {
 		version: 1, // avoid compatibility issues
 		userName: "", // the last used user name
-		services: [], // the list of all used services, with the keys name, colorId, hitCount, encoder, length
+		services: [], // the list of all used services, with the keys name, color, hitCount, encoder, length
 		welcomed: false, // have already completed the tutorial?
 		lastUsedMasterKeyHashed: "" // store the last masterKey used to create a service (hashed with strong decoder)
 	}

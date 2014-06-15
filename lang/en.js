@@ -7,7 +7,8 @@ Lang.addPack({
 			title: "Welcome to PASH",
 			line1: "Feeling guilty for using the <strong>same password</strong> for almost everything?",
 			line2: "Secure your online life with different codes without having to remember all them!",
-			knowHow: "Know how"
+			knowHow: "Know how",
+			skip: "Skip (Enter)"
 		},
 		how: {
 			title: "How PASH works",

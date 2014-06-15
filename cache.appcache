@@ -1,7 +1,7 @@
 CACHE MANIFEST
 
 # Pash
-# Version 1.8.2 - 06/12/2013
+# Version 1.8.3 - 06/12/2013
 # Guilherme de Oliveira Souza
 # http://sitegui.com.br
 
@@ -11,6 +11,7 @@ layout.js
 pash.js
 Screens.js
 sha256.js
+strength.js
 controllers/change-master-key.js
 controllers/create-master-key.js
 controllers/credits.js

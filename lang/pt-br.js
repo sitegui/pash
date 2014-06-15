@@ -44,6 +44,7 @@ Lang.addPack({
 			line2: "Essa é a única coisa que você terá de lembrar: <strong>uma senha para sua vida toda</strong>",
 			help: "Me ajude a testar minhas senhas",
 			password: "Sua senha: ",
+			show: "Mostrar",
 			pash: "Estou pronto pra ação",
 			score: {
 				empty: "Seu score irá aparecer aqui",
@@ -51,7 +52,8 @@ Lang.addPack({
 				weak: "Fraca. Vamos, você consegue fazer melhor",
 				ok: "Está ok, mas tente adicionar caracteres diferentes",
 				great: "Perfeito! Essa parece uma boa opção para uma senha mestre",
-				awesome: "Maravilhoso, mas talvez fique chato digitar essa senha todas as vezes"
+				awesome: "Maravilhoso, mas talvez fique chato digitar essa senha todas as vezes",
+				label: "Pontuação: "
 			},
 			hints: {
 				digits: "usar dígitos",
@@ -59,7 +61,8 @@ Lang.addPack({
 				cases: "usar letras maiúsculas e minúsculas",
 				symbols: "tentar usar alguns símbolos (como espaço ou vírgula)",
 				prefix: "Talvez você possa ",
-				infix: " e "
+				infix: " e ",
+				phases: "usar uma frase completa"
 			}
 		},
 		generate: {

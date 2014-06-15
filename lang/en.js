@@ -45,6 +45,7 @@ Lang.addPack({
 			line2: "This will be the only thing you'll have to remember: <strong>one password for you life</strong>",
 			help: "Help me test my password strength",
 			password: "Your password: ",
+			show: "Show",
 			pash: "I'm ready to PASH",
 			score: {
 				empty: "Your score will show here",
@@ -52,7 +53,8 @@ Lang.addPack({
 				weak: "Weak. You know you can do better",
 				ok: "That's ok, but try adding different characters",
 				great: "Perfect! This seems to be a great choise for your master key",
-				awesome: "Awesome, but it may be annoying to type this password everytime"
+				awesome: "Awesome, but it may be annoying to type this password everytime",
+				label: "Score: "
 			},
 			hints: {
 				digits: "use digits",
@@ -60,7 +62,8 @@ Lang.addPack({
 				cases: "use lower and upper cases",
 				symbols: "try using some symbols (like space or commas)",
 				prefix: "May be you could ",
-				infix: " and "
+				infix: " and ",
+				phases: "use a complete sentence"
 			}
 		},
 		generate: {

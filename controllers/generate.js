@@ -1,4 +1,4 @@
-/*globals Screens, _, _data, generateRawPassword, applyStrongDecoder, CryptoJS, PASH_LENGTH_LONG, PASH_LENGTH_MEDIUM, PASH_DECODER_STANDARD, saveData*/
+/*globals Screens, _, _data, generateRawPassword, applyStrongDecoder, CryptoJS, PASH_LENGTH_LONG, PASH_LENGTH_MEDIUM, PASH_DECODER_STANDARD, saveData, measurePasswordStrength*/
 'use strict'
 
 Screens.addController('generate', {
@@ -128,7 +128,7 @@ Screens.addController('generate', {
 		}
 	},
 	oninit: function () {
-		var colorClick, that = this
+		var that = this
 
 		this.userName = this.$('userName')
 		this.userName.value = _data.userName
@@ -145,11 +145,6 @@ Screens.addController('generate', {
 		this.$('get-help').onclick = function () {
 			Screens.show('create-master-key', true)
 		}
-		this.$('form').onsubmit = function (event) {
-			event.preventDefault()
-			event.stopImmediatePropagation()
-			that.generate()
-		}
 		this.$('generate').onclick = function () {
 			that.generate()
 		}
@@ -157,12 +152,43 @@ Screens.addController('generate', {
 			Screens.show('welcome', null, true)
 		}
 
+		// Listen to Enter key
+		this.userName.onkeypress =
+			this.masterKey.onkeypress =
+			this.serviceName.onkeypress = function (event) {
+				if (event.keyCode === 13) {
+					event.preventDefault()
+					that.generate()
+				}
+		}
+
+		// Give feedback about password strength
+		this.masterKey.onchange = function () {
+			var pass = this.value,
+				score
+			if (pass.length < 4) {
+				this.className = ''
+			} else if (pass.length < 8) {
+				this.className = 'short'
+			} else {
+				score = measurePasswordStrength(pass)
+				if (score <= 32) {
+					this.className = 'weak'
+				} else if (score <= 64) {
+					this.className = 'ok'
+				} else if (score <= 96) {
+					this.className = 'great'
+				} else {
+					this.className = 'awesome'
+				}
+			}
+		}
+
 		// Color buttons
-		colorClick = function (event) {
-			that.setColor(event.currentTarget)
-		};
-		[].forEach.call(this.el.querySelectorAll('.color-option'), function (el) {
-			el.onclick = colorClick
+		this.$$('.color-option').forEach(function (el) {
+			el.onclick = function (event) {
+				that.setColor(event.currentTarget)
+			}
 		})
 	},
 	onbeforeshow: function (obj) {
@@ -247,6 +273,7 @@ Screens.addController('generate', {
 	},
 	onafterhide: function () {
 		this.masterKey.value = ''
+		this.masterKey.className = ''
 		this.serviceName.value = ''
 	}
 })

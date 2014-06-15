@@ -60,61 +60,6 @@ function generateRawPassword(userName, masterPassword, serviceName, color) {
 	return CryptoJS.SHA256(userHash.concat(serviceHash))
 }
 
-// Calculate how strong is a given password
-// Return a positive number
-// In general, scores less than 11 are bad and above 20 are really good
-// info (optional) is an object that will be populated with aditional feedback
-// info will have these keys: hasDigits, hasLetters, hasDifferentCases, hasSymbols
-function measurePasswordStrength(str, info) {
-	var i, c
-	var nLC = 0, nUC = 0, nD = 0, nS = 0 // total chars
-	var nCLC = 0, nCUC = 0, nCD = 0, nCS = 0 // consecutive chars
-	var LCs = "abcdefghijklmnopqrstuvwxyz"
-	var UCs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	var Ds = "0123456789"
-	var lastType = ""
-	var scoreLC, scoreUC, scoreD, scoreS
-	info = info || {}
-	
-	// Calculate how many lower-case (LC), upper-case (UC), digits (D) and symbols (S)
-	// the password has. Also, calculate the amount of consecutive (C) chars of each type
-	for (i=0; i<str.length; i++) {
-		c = str[i]
-		if (LCs.indexOf(c) != -1) {
-			nLC++
-			if (lastType == "LC") nCLC++
-			lastType = "LC"
-		} else if (UCs.indexOf(c) != -1) {
-			nUC++
-			if (lastType == "UC") nCUC++
-			lastType = "UC"
-		} else if (Ds.indexOf(c) != -1) {
-			nD++
-			if (lastType == "D") nCD++
-			lastType = "D"
-		} else {
-			nS++
-			if (lastType == "S") nCS++
-			lastType = "S"
-		}
-	}
-	
-	// The score for each category is based on the number of total and consecutive chars
-	scoreLC = nLC-nCLC/2
-	scoreUC = nUC-nCUC/2
-	scoreD = nD-nCD/2
-	scoreS = nS-nCS/2
-	
-	// Populate info
-	info.hasDigits = Boolean(nD)
-	info.hasLetters = Boolean(nLC || nUC)
-	info.hasDifferentCases = Boolean(nLC && nUC)
-	info.hasSymbols = Boolean(nS)
-	
-	// The final score is an weighted mean of all the individual scores
-	return scoreUC*Math.log(26)+scoreLC*Math.log(26)+scoreD*Math.log(10)+scoreS*Math.log(33)
-}
-
 /*
 Internal methods
 */

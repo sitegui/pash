@@ -1,184 +1,217 @@
 <!DOCTYPE HTML>
 <html manifest="cache.appcache">
+
 <head>
-<meta charset="utf-8">
-<title>PASH - Probably Avoiding Severe Headaches</title>
-<meta name="viewport" content="width=450">
-<link rel="stylesheet" href="css.css">
-<link rel="icon" href="icon.png">
-<script src="sha256.js"></script>
-<script src="pash.js"></script>
-<script src="Screens.js"></script>
-<script src="controllers/welcome.js"></script>
-<script src="controllers/how.js"></script>
-<script src="controllers/create-master-key.js"></script>
-<script src="controllers/result.js"></script>
-<script src="controllers/change-master-key.js"></script>
-<script src="controllers/generate.js"></script>
-<script src="controllers/credits.js"></script>
-<script src="controllers/options.js"></script>
-<script src="lang/Lang.js"></script>
-<script src="lang/en.js"></script>
-<script src="lang/pt-br.js"></script>
-<script src="layout.js"></script>
+	<meta charset="utf-8">
+	<title>PASH - Probably Avoiding Severe Headaches</title>
+	<meta name="viewport" content="width=450">
+	<link rel="stylesheet" href="css.css">
+	<link rel="icon" href="icon.png">
+	<script src="sha256.js"></script>
+	<script src="strength.js"></script>
+	<script src="pash.js"></script>
+	<script src="Screens.js"></script>
+	<script src="controllers/welcome.js"></script>
+	<script src="controllers/how.js"></script>
+	<script src="controllers/create-master-key.js"></script>
+	<script src="controllers/result.js"></script>
+	<script src="controllers/change-master-key.js"></script>
+	<script src="controllers/generate.js"></script>
+	<script src="controllers/credits.js"></script>
+	<script src="controllers/options.js"></script>
+	<script src="lang/Lang.js"></script>
+	<script src="lang/en.js"></script>
+	<script src="lang/pt-br.js"></script>
+	<script src="layout.js"></script>
 </head>
 
 <body>
 
-<div id="stage" class="stage">
-<div class="screen" id="screen-welcome">
-	<h1>[[welcome.title]]</h1>
-	<p>[[welcome.line1]]</p>
-	<p>[[welcome.line2]]</p>
-	<div class="big-button" id="know-more-button">[[welcome.knowHow]]</div>
-	<div class="button-right" id="skip-button">[[welcome.skip]]</div>
-</div>
-
-<div class="screen" id="screen-how">
-	<h1>[[how.title]]</h1>
-	<p>[[how.line1]]</p>
-	<p>[[how.line2]]</p>
-	<div class="more-button" id="more-button">[[how.details]]</div>
-	<div id="more-info" class="more-info">
-		<h2>[[how.hashing.title]]</h2>
-		<p>[[how.hashing.line1]]</p>
-		<ol>
-			<li>[[how.hashing.item1]]</li>
-			<li>[[how.hashing.item2]]</li>
-			<li>[[how.hashing.item3]]</li>
-			<li>[[how.hashing.item4]]</li>
-		</ol>
-		<p>[[how.hashing.line2]]</p>
-		<pre>[[how.hashing.code]]</pre>
-		<h2>[[how.translating.title]]</h2>
-		<p>[[how.translating.line1]]</p>
-		<ul>
-			<li>[[how.translating.item1]]</li>
-			<li>[[how.translating.item2]]</li>
-			<li>[[how.translating.item3]]</li>
-		</ul>
-	</div>
-	<h1>[[how.retrieving.title]]</h1>
-	<p>[[how.retrieving.line1]]</p>
-	<p>[[how.retrieving.line2]]</p>
-	<div class="big-button" id="check-for-yourself">[[how.checkYourself]]</div>
-</div>
-
-<div class="screen" id="screen-create-master-key">
-	<h1>[[createMasterKey.title]]</h1>
-	<p>[[createMasterKey.line1]]</p>
-	<p>[[createMasterKey.line2]]</p>
-	<div class="button" id="show-helper">[[createMasterKey.help]]</div>
-	<div class="more-info" id="helper">
-		<p><span>[[createMasterKey.password]]</span><input id="password" type="password"></p>
-		<div class="result" id="result-area">
-			<p id="result"></p>
-			<p id="hints" class="details"></p>
+	<div id="stage" class="stage">
+		<div class="screen" id="screen-welcome">
+			<h1>[[welcome.title]]</h1>
+			<p>[[welcome.line1]]</p>
+			<p>[[welcome.line2]]</p>
+			<div class="big-button" id="know-more-button">[[welcome.knowHow]]</div>
+			<div class="button-right" id="skip-button">[[welcome.skip]]</div>
 		</div>
+
+		<div class="screen" id="screen-how">
+			<h1>[[how.title]]</h1>
+			<p>[[how.line1]]</p>
+			<p>[[how.line2]]</p>
+			<div class="more-button" id="more-button">[[how.details]]</div>
+			<div id="more-info" class="more-info">
+				<h2>[[how.hashing.title]]</h2>
+				<p>[[how.hashing.line1]]</p>
+				<ol>
+					<li>[[how.hashing.item1]]</li>
+					<li>[[how.hashing.item2]]</li>
+					<li>[[how.hashing.item3]]</li>
+					<li>[[how.hashing.item4]]</li>
+				</ol>
+				<p>[[how.hashing.line2]]</p>
+				<pre>[[how.hashing.code]]</pre>
+				<h2>[[how.translating.title]]</h2>
+				<p>[[how.translating.line1]]</p>
+				<ul>
+					<li>[[how.translating.item1]]</li>
+					<li>[[how.translating.item2]]</li>
+					<li>[[how.translating.item3]]</li>
+				</ul>
+			</div>
+			<h1>[[how.retrieving.title]]</h1>
+			<p>[[how.retrieving.line1]]</p>
+			<p>[[how.retrieving.line2]]</p>
+			<div class="big-button" id="check-for-yourself">[[how.checkYourself]]</div>
+		</div>
+
+		<div class="screen" id="screen-create-master-key">
+			<h1>[[createMasterKey.title]]</h1>
+			<p>[[createMasterKey.line1]]</p>
+			<p>[[createMasterKey.line2]]</p>
+			<div class="button" id="show-helper">[[createMasterKey.help]]</div>
+			<div class="more-info" id="helper">
+				<p><span>[[createMasterKey.password]]</span>
+					<input id="password" type="password" size="40">
+					<label>
+						<input type="checkbox" id="show-password">
+						<span>[[createMasterKey.show]]</span>
+					</label>
+				</p>
+				<div class="result" id="result-area">
+					<p id="result"></p>
+					<p id="hints" class="details"></p>
+					<p id="score" class="details"></p>
+				</div>
+			</div>
+			<div class="big-button" id="pash">[[createMasterKey.pash]]</div>
+		</div>
+
+		<div class="screen" id="screen-generate">
+			<h1>[[generate.title]]</h1>
+			<table>
+				<tr>
+					<td><strong>[[generate.name]]</strong>
+						<br><span class="details">[[generate.nameDetails]]</span>
+					</td>
+					<td>
+						<input id="userName" name="userName">
+					</td>
+				</tr>
+				<tr>
+					<td><strong>[[generate.masterKey]]</strong>
+						<br><span class="details"><span>[[generate.masterKeyDetails]]</span>
+						<br><span class="button" id="get-help">[[generate.getHelp]]</span></span>
+					</td>
+					<td>
+						<input id="masterKey" type="password" name="masterKey">
+					</td>
+				</tr>
+				<tr>
+					<td><strong>[[generate.service]]</strong>
+						<br><span class="details">[[generate.serviceDetails]]</span>
+					</td>
+					<td>
+						<input id="serviceName" name="serviceName">
+						<br>
+						<span id="saved-services"><span>[[generate.or]]</span>
+						<br>
+						<select id="selectServices">
+							<option disabled selected>[[generate.history]]</option>
+						</select>
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<td><strong>[[generate.color.title]]</strong>
+						<br><span class="details">[[generate.colorDetails]]</span>
+					</td>
+					<td class="color-options" id="color-options">
+						<div class="color-option color-red" id="red" data-css-color="rgba(255, 0, 0, .5)"></div>
+						<div class="color-option color-green" id="green" data-css-color="rgba(0, 255, 0, .5)"></div>
+						<div class="color-option color-blue" id="blue" data-css-color="rgba(0, 0, 255, .5)"></div>
+						<br>
+						<div class="color-option color-yellow" id="yellow" data-css-color="rgba(255, 255, 0, .5)"></div>
+						<div class="color-option color-orange" id="orange" data-css-color="rgba(255, 128, 0, .5)"></div>
+						<div class="color-option color-purple" id="purple" data-css-color="rgba(255, 0, 255, .5)"></div>
+					</td>
+				</tr>
+			</table>
+			<div id="alert-area" class="alert" style="display:none"></div>
+			<div class="big-button" id="generate">[[generate.generate]]</div>
+			<div class="go-back" id="home">[[generate.home]]</div>
+			</form>
+		</div>
+
+		<div class="screen" id="screen-change-master-key">
+			<h1>[[changeMasterKey.title]]</h1>
+			<p>[[changeMasterKey.line1]]</p>
+			<p>
+				<div class="button" id="try-again">[[changeMasterKey.tryAgain]]</div><span>[[changeMasterKey.or]]</span>
+				<div class="button" id="its-ok">[[changeMasterKey.ok]]</div>
+			</p>
+			<p>
+				<div class="more-button" id="info-button">[[changeMasterKey.how]]</div>
+			</p>
+			<div class="more-info" id="info">
+				<p>[[changeMasterKey.info.line1]]</p>
+				<p><span>[[changeMasterKey.info.line2A]]</span><code id="current"></code><span>[[changeMasterKey.info.line2B]]</span><code id="new"></code>
+				</p>
+			</div>
+		</div>
+
+		<div class="screen" id="screen-result">
+			<h1>[[result.title]]</h1>
+			<p>[[result.line1]]</p>
+			<div class="result" id="result"></div>
+			<p>[[result.line2]]</p>
+			<div class="more-button" id="more-button">[[result.changeFormat]]</div>
+			<div id="more-info">
+				<p><strong>[[result.format]]</strong>:
+					<span class="option" id="decoder-standard" data-id="0">[[result.standard]]</span>
+					<span class="option" id="decoder-numeric" data-id="1">[[result.numeric]]</span>
+					<span class="option" id="decoder-strong" data-id="2">[[result.stronger]]</span>
+				</p>
+				<p><strong>[[result.length]]</strong>:
+					<span class="option" id="length-short" data-id="1">[[result.short]]</span>
+					<span class="option" id="length-medium" data-id="2">[[result.medium]]</span>
+					<span class="option" id="length-long" data-id="3">[[result.long]]</span>
+				</p>
+			</div>
+			<div class="go-back" id="back">[[result.back]]</div>
+		</div>
+
+		<div class="screen" id="screen-credits">
+			<h1>[[credits.title]]</h1>
+			<p>[[credits.line1]]</p>
+			<p>[[credits.line2]]</p>
+			<p>[[credits.line3]]</p>
+			<div class="go-back" id="home">[[credits.home]]</div>
+		</div>
+
+		<div class="screen" id="screen-options">
+			<h1>[[options.title]]</h1>
+			<p class="button" id="install">[[options.install]]</p>
+			<p class="button" id="clear">[[options.clear]]</p>
+			<p><span>[[options.language]]</span>
+				<select id="language"></select>
+			</p>
+			<div class="go-back" id="home">[[options.home]]</div>
+		</div>
+
 	</div>
-	<div class="big-button" id="pash">[[createMasterKey.pash]]</div>
-</div>
 
-<div class="screen" id="screen-generate">
-	<h1>[[generate.title]]</h1>
-	<form id="form">
-	<table>
-		<tr>
-			<td><strong>[[generate.name]]</strong><br><span class="details">[[generate.nameDetails]]</span></td>
-			<td><input id="userName" name="userName"></td>
-		</tr>
-		<tr>
-			<td><strong>[[generate.masterKey]]</strong><br><span class="details"><span>[[generate.masterKeyDetails]]</span><br><span class="button" id="get-help">[[generate.getHelp]]</span></span></td>
-			<td><input id="masterKey" type="password" name="masterKey"></td>
-		</tr>
-		<tr>
-			<td><strong>[[generate.service]]</strong><br><span class="details">[[generate.serviceDetails]]</span></td>
-			<td>
-				<input id="serviceName" name="serviceName"><br>
-				<span id="saved-services"><span>[[generate.or]]</span><br>
-				<select id="selectServices">
-					<option disabled selected>[[generate.history]]</option>
-				</select></span>
-			</td>
-		</tr>
-		<tr>
-			<td><strong>[[generate.color.title]]</strong><br><span class="details">[[generate.colorDetails]]</span></td>
-			<td class="color-options" id="color-options">
-				<div class="color-option color-red" id="red" data-css-color="rgba(255, 0, 0, .5)"></div>
-				<div class="color-option color-green" id="green" data-css-color="rgba(0, 255, 0, .5)"></div>
-				<div class="color-option color-blue" id="blue" data-css-color="rgba(0, 0, 255, .5)"></div><br>
-				<div class="color-option color-yellow" id="yellow" data-css-color="rgba(255, 255, 0, .5)"></div>
-				<div class="color-option color-orange" id="orange" data-css-color="rgba(255, 128, 0, .5)"></div>
-				<div class="color-option color-purple" id="purple" data-css-color="rgba(255, 0, 255, .5)"></div>
-			</td>
-		</tr>
-	</table>
-	<input type="submit" style="display:none">
-	</form>
-	<div id="alert-area" class="alert" style="display:none"></div>
-	<div class="big-button" id="generate">[[generate.generate]]</div>
-	<div class="go-back" id="home">[[generate.home]]</div>
-    </form>
-</div>
-
-<div class="screen" id="screen-change-master-key">
-	<h1>[[changeMasterKey.title]]</h1>
-	<p>[[changeMasterKey.line1]]</p>
-	<p><div class="button" id="try-again">[[changeMasterKey.tryAgain]]</div><span>[[changeMasterKey.or]]</span><div class="button" id="its-ok">[[changeMasterKey.ok]]</div></p>
-	<p><div class="more-button" id="info-button">[[changeMasterKey.how]]</div></p>
-	<div class="more-info" id="info">
-		<p>[[changeMasterKey.info.line1]]</p>
-		<p><span>[[changeMasterKey.info.line2A]]</span><code id="current"></code><span>[[changeMasterKey.info.line2B]]</span><code id="new"></code></p>
+	<div id="update-alert" class="update-alert">
+		<span>[[update.text]]</span>
+		<br>
+		<span id="update" class="button">[[update.button]]</span>
 	</div>
-</div>
 
-<div class="screen" id="screen-result">
-	<h1>[[result.title]]</h1>
-	<p>[[result.line1]]</p>
-	<div class="result" id="result"></div>
-	<p>[[result.line2]]</p>
-	<div class="more-button" id="more-button">[[result.changeFormat]]</div>
-	<div id="more-info">
-		<p><strong>[[result.format]]</strong>:
-			<span class="option" id="decoder-standard" data-id="0">[[result.standard]]</span>
-			<span class="option" id="decoder-numeric" data-id="1">[[result.numeric]]</span>
-			<span class="option" id="decoder-strong" data-id="2">[[result.stronger]]</span>
-		</p>
-		<p><strong>[[result.length]]</strong>:
-			<span class="option" id="length-short" data-id="1">[[result.short]]</span>
-			<span class="option" id="length-medium" data-id="2">[[result.medium]]</span>
-			<span class="option" id="length-long" data-id="3">[[result.long]]</span>
-		</p>
-	</div>
-	<div class="go-back" id="back">[[result.back]]</div>
-</div>
-
-<div class="screen" id="screen-credits">
-	<h1>[[credits.title]]</h1>
-	<p>[[credits.line1]]</p>
-	<p>[[credits.line2]]</p>
-	<p>[[credits.line3]]</p>
-	<div class="go-back" id="home">[[credits.home]]</div>
-</div>
-
-<div class="screen" id="screen-options">
-	<h1>[[options.title]]</h1>
-	<p class="button" id="install">[[options.install]]</p>
-	<p class="button" id="clear">[[options.clear]]</p>
-	<p><span>[[options.language]]</span><select id="language"></select></p>
-	<div class="go-back" id="home">[[options.home]]</div>
-</div>
-
-</div>
-
-<div id="update-alert" class="update-alert">
-	<span>[[update.text]]</span><br>
-	<span id="update" class="button">[[update.button]]</span>
-</div>
-
-<footer>
-	<span class="button" id="credits">[[credits.title]]</span>
-	<span class="options button" id="options">[[options.title]]</span>
-</footer>
+	<footer>
+		<span class="button" id="credits">[[credits.title]]</span>
+		<span class="options button" id="options">[[options.title]]</span>
+	</footer>
 </body>
+
 </html>

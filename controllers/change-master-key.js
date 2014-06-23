@@ -1,4 +1,4 @@
-/*globals Screens, _data*/
+/*globals Screens, Storage*/
 'use strict'
 
 Screens.addController('change-master-key', {

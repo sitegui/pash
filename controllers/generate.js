@@ -34,7 +34,7 @@ Screens.addController('generate', {
 
 	// Try to generate password from the input values
 	generate: function () {
-		var i, service, hashedMasterKey, mayBeWrong, resultData
+		var i, service, hashedMasterKey, mayBeWrong, resultData, guessedColor
 
 		// Validate
 		var userName = this.userName.value
@@ -55,16 +55,11 @@ Screens.addController('generate', {
 			return
 		}
 		if (!this.color) {
-			// Try to guess
-			for (i = 0; i < _data.services.length; i++) {
-				if (_data.services[i].name === serviceName) {
-					this.setColor(this.$(_data.services[i].color))
-					break
-				}
-			}
-
-			if (!this.color) {
-				// Could not guess
+			// Try to guess the color
+			guessedColor = Storage.getColorForService(serviceName)
+			if (guessedColor) {
+				this.setColor(this.$(guessedColor))
+			} else {
 				this.alert(_('generate.alert.color'))
 				return
 			}

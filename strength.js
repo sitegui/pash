@@ -27,11 +27,11 @@ function measurePasswordStrength(str, info) {
 		c = str[i]
 		if (LCs.indexOf(c) !== -1) {
 			type = 'LC'
-			typeSize = 20
+			typeSize = 18
 			hasLC = true
 		} else if (UCs.indexOf(c) !== -1) {
 			type = 'UC'
-			typeSize = 20
+			typeSize = 18
 			hasUC = true
 		} else if (Ds.indexOf(c) !== -1) {
 			type = 'D'
@@ -39,10 +39,10 @@ function measurePasswordStrength(str, info) {
 			hasD = true
 		} else {
 			type = 'S'
-			typeSize = 30
+			typeSize = 20
 			hasS = true
 		}
-		consecutives = lastType === type ? consecutives + 1 : 1
+		consecutives = lastType === type ? consecutives + 1 / 2 : 1
 		bits += Math.max(0, Math.log(typeSize / consecutives) / Math.LN2)
 		lastType = type
 	}

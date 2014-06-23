@@ -1,4 +1,4 @@
-/*globals Screens, _, _data, generateRawPassword, applyStrongDecoder, CryptoJS, PASH_LENGTH_LONG, PASH_LENGTH_MEDIUM, PASH_DECODER_STANDARD, saveData, measurePasswordStrength*/
+/*globals Screens, _, Storage, CryptoJS, measurePasswordStrength, Pash*/
 'use strict'
 
 Screens.addController('generate', {
@@ -73,7 +73,7 @@ Screens.addController('generate', {
 		var color = this.color.id
 
 		// Generate raw value
-		var raw = generateRawPassword(userName, masterKey, serviceName, color)
+		var raw = Pash.generateRawPassword(userName, masterKey, serviceName, color)
 
 		// Save basic info into _data
 		_data.userName = userName
@@ -88,13 +88,13 @@ Screens.addController('generate', {
 
 		mayBeWrong = false
 		if (i === _data.services.length) {
-			hashedMasterKey = applyStrongDecoder(CryptoJS.SHA256(masterKey), PASH_LENGTH_LONG)
+			hashedMasterKey = Pash._applyStrongDecoder(CryptoJS.SHA256(masterKey), Pash.length.LONG)
 			service = {
 				name: serviceName,
 				color: color,
 				hitCount: 1,
-				decoder: PASH_DECODER_STANDARD,
-				length: PASH_LENGTH_MEDIUM
+				decoder: Pash.decoder.STANDARD,
+				length: Pash.length.MEDIUM
 			}
 
 			// Compare the used key with the previous
@@ -191,12 +191,15 @@ Screens.addController('generate', {
 			}
 		})
 	},
-	onbeforeshow: function (obj) {
+	// options is an optional object with keys:
+	// color: the color name to select as default (example: 'red')
+	// serviceName: the default value for service name (as a string)
+	onbeforeshow: function (options) {
 		var group, totalHitCount, acumulator, mostUsed, leastUsed, i
 
 		// Reset service fields
-		this.setColor(obj ? this.$(obj.color) : null)
-		this.serviceName.value = obj ? obj.serviceName : ''
+		this.setColor(options ? this.$(options.color) : null)
+		this.serviceName.value = options ? options.serviceName : ''
 
 		// Populate the saved services choose box
 		if (!_data.services.length) {

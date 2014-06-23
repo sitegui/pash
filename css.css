@@ -122,8 +122,8 @@ input {
 }
 .color-option {
 	display: inline-block;
-	width: 45px;
-	height: 45px;
+	width: 30px;
+	height: 30px;
 	margin: 4px;
 	cursor: pointer;
 	border-width: 2px;
@@ -136,12 +136,6 @@ input {
 .color-black {
 	background-color: rgba(0, 0, 0, .9);
 }
-.color-gray {
-	background-color: rgba(128, 128, 128, .9);
-}
-.color-brown {
-	background-color: rgba(153, 102, 51, .9);
-}
 .color-red {
 	background-color: rgba(255, 0, 0, .9);
 }
@@ -150,15 +144,6 @@ input {
 }
 .color-blue {
 	background-color: rgba(0, 0, 255, .9);
-}
-.color-yellow {
-	background-color: rgba(255, 255, 0, .9);
-}
-.color-orange {
-	background-color: rgba(255, 128, 0, .9);
-}
-.color-purple {
-	background-color: rgba(255, 0, 255, .9);
 }
 #masterKey.short {
 	border: medium rgba(255, 0, 0, .5) solid;

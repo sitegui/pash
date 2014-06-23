@@ -6,6 +6,8 @@
 	"asi": true,
 	"trailing": true,
 	"quotmark": true,
+	"eqeqeq": true,
+	"curly": true,
 	"strict": true,
 	"undef": true,
 	"expr": true,

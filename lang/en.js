@@ -61,7 +61,7 @@ Lang.addPack({
 				letters: "use letters",
 				cases: "use lower and upper cases",
 				symbols: "try using some symbols (like space or commas)",
-				prefix: "May be you could ",
+				prefix: "Maybe you could ",
 				infix: " and ",
 				phases: "use a complete sentence"
 			}

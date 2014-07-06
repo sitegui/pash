@@ -79,7 +79,7 @@ Note: the formatting algorithm has no static bounds for the number of consumed b
 // userName and serviceName are case insensitive strings
 // masterPassword is the only information the user should retype every time
 // color is one of Pash.COLOR.* constants and is used to let the user get more than one key for one service
-function Pash(userName, masterPassword, serviceName, color) {
+function Pash(masterPassword, userName, serviceName, color) {
 	var parse = CryptoJS.enc.Utf8.parse
 
 	// Normalize and encode
@@ -105,7 +105,7 @@ function Pash(userName, masterPassword, serviceName, color) {
 Pash.prototype.getStandardPassword = function (length) {
 	var alphabet, str, i, hasa, has0, c
 
-	alphabet = Pash._alphabets.a.concat(Pash._alphabets['0'])
+	alphabet = Pash._alphabets.a + Pash._alphabets['0']
 	length *= 5
 	do {
 		// The first char is an upper-case letter
@@ -143,13 +143,13 @@ Pash.prototype.getNumericPassword = function (length) {
 Pash.prototype.getStrongPassword = function (length) {
 	var alphabet, str, i, hasA, hasa, has0, has$, c, alphabets = Pash._alphabets
 
-	alphabet = alphabets.A.concat(alphabets.a, alphabets['0'], alphabets.$)
+	alphabet = alphabets.A + alphabets.a + alphabets['0'] + alphabets.$
 	length *= 7
 	do {
 		str = ''
 
 		// Pick random from Aa0$
-		hasA = hasa = has0, has$ = 0
+		hasA = hasa = has0 = has$ = false
 		for (i = 0; i < length; i++) {
 			c = this._chooseRandom(alphabet)
 			str += c

@@ -87,7 +87,7 @@ worker.onmessage = function (oEvent) {
 	delete worker.callback[oEvent.data.tag]
 }
 
-function Pash(userName, masterPassword, serviceName, color) {
+function Pash(masterPassword, userName, serviceName, color) {
 	this.userName = userName
 	this.masterPassword = masterPassword
 	this.serviceName = serviceName
@@ -99,10 +99,9 @@ function Pash(userName, masterPassword, serviceName, color) {
 //if decoder==NUMERIC Return a string composed only of numbers
 //if decoder==STRONG Return a string with at least 1 upper-case letter, 1 lower-case letter, 1 digit and 1 symbol
 // length is one of Pash.LENGTH.* constants
-function getPassword(pash, decoder, length) {
-	console.time('bitu')
+Pash.prototype.getPassword = function (decoder, length) {
 	worker.postMessage({
-		pash: pash,
+		pash: this,
 		decoder: decoder,
 		length: length,
 		tag: worker.count
@@ -110,14 +109,13 @@ function getPassword(pash, decoder, length) {
 
 	worker.callback[worker.count] = function (str) {
 		console.log('password: ' + str)
-		console.timeEnd('bitu')
 	}
 	worker.count++
 
 }
 
 // Color constants
-var COLOR = {
+Pash.COLOR = {
 	RED: 'red',
 	GREEN: 'green',
 	BLUE: 'blue',
@@ -125,14 +123,14 @@ var COLOR = {
 }
 
 // Length constants
-var LENGTH = {
+Pash.LENGTH = {
 	SHORT: 1,
 	MEDIUM: 2,
 	LONG: 3
 }
 
 // Decoder type constants
-var DECODER = {
+Pash.DECODER = {
 	STANDARD: 0,
 	NUMERIC: 1,
 	STRONG: 2

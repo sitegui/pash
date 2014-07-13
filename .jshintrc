@@ -19,5 +19,7 @@
 	"freeze": true,
 	"-W033": true,
 	"-W058": true,
-	"node": true
+	"node": true,
+	"maxlen": 120,
+	"bitwise": false
 }

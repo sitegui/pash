@@ -68,9 +68,12 @@ To pick a char from an alphabet with N elements (eg, 10 digits):
 3. check if I<N
 `  If it holds, them return the I-th element from the alphabet
 `  Otherwise repeat from 1.
-These steps guarantee the uniform distribution of the chosen chars (given that the input bit stream is indistinguishable from random noise)
+These steps guarantee the uniform distribution of the chosen chars
+(given that the input bit stream is indistinguishable from random noise)
 
-Note: the formatting algorithm has no static bounds for the number of consumed bits. The key derivation block can generate one 256-bit block and wait to see if it's enough. If not, it must generate the second block and wait again.
+Note: the formatting algorithm has no static bounds for the number of consumed bits.
+The key derivation block can generate one 256-bit block and wait to see if it's enough.
+If not, it must generate the second block and wait again.
 
 */
 
@@ -78,40 +81,41 @@ Note: the formatting algorithm has no static bounds for the number of consumed b
 // userName and serviceName are case insensitive strings
 // masterPassword is the only information the user should retype every time
 // color is one of Pash.COLOR.* constants and is used to let the user get more than one key for one service
-
-var worker = new Worker('./Worker.js')
-worker.callback = {}
-worker.count = 0
-worker.onmessage = function (oEvent) {
-	worker.callback[oEvent.data.tag](oEvent.data.password)
-	delete worker.callback[oEvent.data.tag]
-}
-
 function Pash(masterPassword, userName, serviceName, color) {
-	this.userName = userName
-	this.masterPassword = masterPassword
-	this.serviceName = serviceName
-	this.color = color
+	this._masterPassword = masterPassword
+	this._userName = Pash.normalize(userName)
+	this._serviceName = Pash.normalize(serviceName)
+	this._color = Pash.normalize(color)
 }
 
-// pash is a Pash instance, decoder is onde of DECODER constants
-//if decoder==STANDARD Return a string with at least 1 upper-case letter, 1 lower-case letter and 1 digit
-//if decoder==NUMERIC Return a string composed only of numbers
-//if decoder==STRONG Return a string with at least 1 upper-case letter, 1 lower-case letter, 1 digit and 1 symbol
+// Return the normalized value for a given string
+// For the pash algorithm, the user name, service are normalized, this implies:
+// PASH('name', '1234', 'gmail', 'red') === PASH('Name', '1234', 'G mail', 'red')
+Pash.normalize = function (str) {
+	return str.replace(/\s/g, '').toLowerCase()
+}
+
+// Generate a password with the given outputs
+// format is one of Pash.FORMAT.* constants
 // length is one of Pash.LENGTH.* constants
-Pash.prototype.getPassword = function (decoder, length) {
-	worker.postMessage({
-		pash: this,
-		decoder: decoder,
+// callback(pass) will be called when done
+// pass is the resulting string
+// All work is delegated to a background worker that runs on a background thread
+// The worker will forget about all computed data after done
+Pash.prototype.generatePassword = function (format, length, callback) {
+	var tag = String(Math.random())
+
+	Pash._worker.postMessage({
+		masterPassword: this._masterPassword,
+		userName: this._userName,
+		serviceName: this._serviceName,
+		color: this._color,
+		format: format,
 		length: length,
-		tag: worker.count
+		tag: tag
 	})
 
-	worker.callback[worker.count] = function (str) {
-		console.log('password: ' + str)
-	}
-	worker.count++
-
+	Pash._callbacks[tag] = callback
 }
 
 // Color constants
@@ -129,9 +133,28 @@ Pash.LENGTH = {
 	LONG: 3
 }
 
-// Decoder type constants
-Pash.DECODER = {
+// Output format type constants
+Pash.FORMAT = {
 	STANDARD: 0,
 	NUMERIC: 1,
 	STRONG: 2
+}
+
+/*
+Internals
+*/
+
+Pash._worker = new Worker('./PashWorker.js')
+Pash._callbacks = Object.create(null)
+
+// Handle generated password message
+Pash._worker.onmessage = function (event) {
+	var tag = event.data.tag,
+		result = event.data.result,
+		callback = Pash._callbacks[tag]
+
+	delete Pash._callbacks[tag]
+	if (typeof callback === 'function') {
+		callback(result)
+	}
 }

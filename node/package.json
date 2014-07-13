@@ -1,0 +1,21 @@
+{
+	"name": "pash",
+	"version": "0.0.1",
+	"author": "Rodolfo Bitu",
+	"description": "PASH algorithm: reference implementation in node",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sitegui/pash"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"should": "~3.1.4",
+		"mocha": "~1.18.2"
+	},
+	"engines": {
+		"node": ">=0.10"
+	},
+	"scripts": {
+		"test": "mocha -R spec -b"
+	}
+}

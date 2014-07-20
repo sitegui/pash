@@ -1,4 +1,4 @@
-/*globals Screens, _, measurePasswordStrength, _data*/
+/*globals Screens, _, measurePasswordStrength, Storage*/
 'use strict'
 
 Screens.addController('create-master-key', {
@@ -58,7 +58,7 @@ Screens.addController('create-master-key', {
 		var that = this
 
 		this.$('pash').onclick = function () {
-			_data.welcomed = true
+			Storage.data.welcomed = true
 			Screens.show('generate')
 		}
 		this.$('show-helper').onclick = function () {

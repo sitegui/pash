@@ -3,14 +3,16 @@
 
 Screens.addController('create-master-key', {
 	processPassword: function () {
-		var hintsSpan, resultSpan, str, resultArea, scoreSpan
-		var info, score, hints = []
-		hintsSpan = this.$('hints')
-		scoreSpan = this.$('score')
-		resultSpan = this.$('result')
-		resultArea = this.$('result-area')
+		var hintsSpan = this.$('hints'),
+			scoreSpan = this.$('score'),
+			resultSpan = this.$('result'),
+			resultArea = this.$('result-area'),
+			hints = [],
+			str = this.$('password').value,
+			info = {},
+			score
+
 		hintsSpan.textContent = scoreSpan.textContent = ''
-		str = this.$('password').value
 		resultArea.style.backgroundColor = 'rgba(0, 0, 0, .5)'
 		if (str.length < 4) {
 			resultSpan.textContent = _('createMasterKey.score.empty')
@@ -18,7 +20,6 @@ Screens.addController('create-master-key', {
 			resultSpan.textContent = _('createMasterKey.score.short')
 			resultArea.style.backgroundColor = 'rgba(255, 0, 0, .5)'
 		} else {
-			info = {}
 			score = measurePasswordStrength(str, info)
 			if (score <= 32) {
 				resultSpan.textContent = _('createMasterKey.score.weak')
@@ -55,10 +56,11 @@ Screens.addController('create-master-key', {
 		this.updateHeight()
 	},
 	oninit: function () {
-		var that = this
+		var that = this,
+			interval = null
 
 		this.$('pash').onclick = function () {
-			Storage.data.welcomed = true
+			Storage.setWelcomed()
 			Screens.show('generate')
 		}
 		this.$('show-helper').onclick = function () {
@@ -67,7 +69,6 @@ Screens.addController('create-master-key', {
 			that.$('password').focus()
 			that.updateHeight()
 		}
-		var interval = null
 		this.$('password').onkeyup = function () {
 			clearTimeout(interval)
 			interval = setTimeout(function () {
@@ -79,6 +80,7 @@ Screens.addController('create-master-key', {
 		}
 		this.$('result-area').style.transition = 'background-color .5s ease'
 	},
+	// wantHelp is a boolean. If true, start with the form input opened
 	onbeforeshow: function (wantHelp) {
 		this.$('show-password').checked = false
 		this.$('password').type = 'password'

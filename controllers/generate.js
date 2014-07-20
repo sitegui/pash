@@ -1,9 +1,17 @@
-/*globals Screens, _, _data, saveData, measurePasswordStrength, Pash, Storage*/
+/*globals Screens, _, measurePasswordStrength, Pash, Storage*/
 'use strict'
 
 Screens.addController('generate', {
 	// Store the current selected color element (or null if none)
 	color: null,
+
+	// Store references to input fields
+	userName: null,
+	masterKey: null,
+	serviceName: null,
+	selectServices: null,
+
+	alertInterval: null,
 
 	// Set the selected color as the given element (or null to unset)
 	setColor: function (value) {
@@ -24,86 +32,154 @@ Screens.addController('generate', {
 		area.style.display = ''
 		area.textContent = str
 		clearTimeout(this._alertInterval)
-		this._alertInterval = setTimeout(function () {
+		this.alertInterval = setTimeout(function () {
 			area.style.display = 'none'
 			that.updateHeight()
 		}, 5e3)
 		this.updateHeight()
 	},
-	_alertInterval: null,
 
-	// Try to generate password from the input values
-	generate: function () {
-		var i, service, resultData, guessedColor
-
-		// Validate
-		var userName = this.userName.value
-		var masterKey = this.masterKey.value
-		var serviceName = this.serviceName.value
+	// Check if all fields are correctly filled
+	// Return true in case of success, false otherwise
+	validate: function () {
+		var userName = this.userName.value,
+			masterKey = this.masterKey.value,
+			serviceName = this.serviceName.value,
+			guessedColor
 		if (!userName) {
 			this.alert(_('generate.alert.name'))
 			this.userName.focus()
-			return
+			return false
 		}
 		if (masterKey.length < 8) {
 			this.alert(_('generate.alert.masterKey'))
 			this.masterKey.focus()
-			return
+			return false
 		}
 		if (!serviceName) {
 			this.alert(_('generate.alert.service'))
-			return
+			return false
 		}
 		if (!this.color) {
 			// Try to guess the color
-			guessedColor = Storage.getColorForService(serviceName)
+			guessedColor = Storage.getColorForService(userName, serviceName)
 			if (guessedColor) {
 				this.setColor(this.$(guessedColor))
 			} else {
 				this.alert(_('generate.alert.color'))
-				return
+				return false
 			}
 		}
-		var cssColor = this.color.dataset.cssColor
-		var color = this.color.id
+		return true
+	},
 
-		// Create pash object
-		var pash = new Pash(masterKey, userName, serviceName, color)
-
-		// Save basic info into _data
-		_data.userName = userName
-		for (i = 0; i < _data.services.length; i++) {
-			service = _data.services[i]
-			if (service.name.toUpperCase() === serviceName.toUpperCase() &&
-				service.color === color) {
-				service.hitCount++
-				break
-			}
+	// Try to generate password from the input values
+	generate: function () {
+		if (!this.validate()) {
+			return
 		}
-		if (i === _data.services.length) {
-			service = {
-				name: serviceName,
-				color: color,
-				hitCount: 1,
-				decoder: Pash.FORMAT.STANDARD,
-				length: Pash.LENGTH.MEDIUM
-			}
-			_data.services.push(service)
-		}
-		saveData()
 
-		Screens.show('result', {
-			pash: pash,
-			userName: userName,
-			service: service,
-			cssColor: cssColor
+		var userName = this.userName.value,
+			masterKey = this.masterKey.value,
+			serviceName = this.serviceName.value,
+			cssColor = this.color.dataset.cssColor,
+			color = this.color.id,
+			pash = new Pash(masterKey, userName, serviceName, color)
+
+		// Generate pash black key that will be used to check if the masterKey was typed right
+		pash.generatePashKey(Pash.COLOR.BLACK, function (key) {
+			var service = Storage.useService(userName, key, serviceName, color)
+			if (service) {
+				// All good, go to result screen to generate the password
+				Screens.show('result', {
+					pash: pash,
+					userName: userName,
+					service: service,
+					cssColor: cssColor
+				})
+			} else {
+				// The master key was different from last time, let the user choose what to do
+				Screens.show('change-master-key', {
+					pash: pash,
+					userName: userName,
+					service: service,
+					cssColor: cssColor
+				})
+			}
 		})
+	},
+	updateHistoryList: function () {
+		var data = Storage.getUserData(this.userName.value),
+			acc = 0,
+			most = [],
+			least = [],
+			total, i, group
+
+		if (!data || !data.services.length) {
+			this.$('saved-services').style.display = 'none'
+		} else {
+			// Clean up
+			this.$('saved-services').style.display = ''
+			while (this.selectServices.children.length > 1) {
+				this.selectServices.removeChild(this.selectServices.lastChild)
+			}
+
+			// Separate in two groups (most used, least used)
+			data.services.sort(function (a, b) {
+				return b.hitCount - a.hitCount
+			})
+			total = data.services.reduce(function (sum, service) {
+				return sum + service.hitCount
+			}, 0)
+			for (i = 0; i < data.services.length; i++) {
+				if (acc < total * 0.7) {
+					most.push(data.services[i])
+				} else {
+					least.push(data.services[i])
+				}
+				acc += data.services[i].hitCount
+			}
+			most.sort(function (a, b) {
+				return a.name > b.name ? 1 : -1
+			})
+			least.sort(function (a, b) {
+				return a.name > b.name ? 1 : -1
+			})
+
+			// Create the elements
+			if (least.length) {
+				group = document.createElement('optgroup')
+				group.label = _('generate.mostUsed')
+				this.selectServices.appendChild(group)
+			} else {
+				group = this.selectServices
+			}
+			most.forEach(function (service) {
+				var option = document.createElement('option')
+				option.textContent = service.name + ' - ' + _('generate.color.' + service.color)
+				option.dataset.name = service.name
+				option.dataset.color = service.color
+				group.appendChild(option)
+			})
+			if (least.length) {
+				group = document.createElement('optgroup')
+				group.label = _('generate.leastUsed')
+				this.selectServices.appendChild(group)
+				least.forEach(function (service) {
+					var option = document.createElement('option')
+					option.textContent = service.name + ' - ' + _('generate.color.' + service.color)
+					option.dataset.name = service.name
+					option.dataset.color = service.color
+					group.appendChild(option)
+				})
+			}
+			this.selectServices.selectedIndex = 0
+		}
 	},
 	oninit: function () {
 		var that = this
 
 		this.userName = this.$('userName')
-		this.userName.value = _data.userName
 		this.masterKey = this.$('masterKey')
 		this.serviceName = this.$('serviceName')
 		this.selectServices = this.$('selectServices')
@@ -125,14 +201,15 @@ Screens.addController('generate', {
 		}
 
 		// Listen to Enter key
-		this.userName.onkeypress =
-			this.masterKey.onkeypress =
+		this.masterKey.onkeypress =
 			this.serviceName.onkeypress = function (event) {
 				if (event.keyCode === 13) {
 					event.preventDefault()
 					that.generate()
 				}
 		}
+
+		this.userName.onkeyup = this.updateHistoryList.bind(this)
 
 		// Give feedback about password strength
 		this.masterKey.onchange = function () {
@@ -163,80 +240,12 @@ Screens.addController('generate', {
 			}
 		})
 	},
-	// options is an optional object with keys:
-	// color: the color name to select as default (example: 'red')
-	// serviceName: the default value for service name (as a string)
-	onbeforeshow: function (options) {
-		var group, totalHitCount, acumulator, mostUsed, leastUsed, i
-
-		// Reset service fields
-		this.setColor(options ? this.$(options.color) : null)
-		this.serviceName.value = options ? options.serviceName : ''
-
-		// Populate the saved services choose box
-		if (!_data.services.length) {
-			this.$('saved-services').style.display = 'none'
-		} else {
-			// Clean-up
-			this.$('saved-services').style.display = ''
-			while (this.selectServices.children.length > 1) {
-				this.selectServices.removeChild(this.selectServices.lastChild)
-			}
-
-			// Separate in two groups (most used, least used)
-			_data.services.sort(function (a, b) {
-				return b.hitCount - a.hitCount
-			})
-			totalHitCount = _data.services.reduce(function (sum, service) {
-				return sum + service.hitCount
-			}, 0)
-			acumulator = 0
-			mostUsed = []
-			leastUsed = []
-			for (i = 0; i < _data.services.length; i++) {
-				if (acumulator < totalHitCount * 0.7) {
-					mostUsed.push(_data.services[i])
-				} else {
-					leastUsed.push(_data.services[i])
-				}
-				acumulator += _data.services[i].hitCount
-			}
-			mostUsed.sort(function (a, b) {
-				return a.name > b.name ? 1 : -1
-			})
-			leastUsed.sort(function (a, b) {
-				return a.name > b.name ? 1 : -1
-			})
-
-			// Create the elements
-			if (leastUsed.length) {
-				group = document.createElement('optgroup')
-				group.label = _('generate.mostUsed')
-				this.selectServices.appendChild(group)
-			} else {
-				group = this.selectServices
-			}
-			mostUsed.forEach(function (service) {
-				var option = document.createElement('option')
-				option.textContent = service.name + ' - ' + _('generate.color.' + service.color)
-				option.dataset.name = service.name
-				option.dataset.color = service.color
-				group.appendChild(option)
-			})
-			if (leastUsed.length) {
-				group = document.createElement('optgroup')
-				group.label = _('generate.leastUsed')
-				this.selectServices.appendChild(group)
-				leastUsed.forEach(function (service) {
-					var option = document.createElement('option')
-					option.textContent = service.name + ' - ' + _('generate.color.' + service.color)
-					option.dataset.name = service.name
-					option.dataset.color = service.color
-					group.appendChild(option)
-				})
-			}
-			this.selectServices.selectedIndex = 0
-		}
+	onbeforeshow: function () {
+		// Reset fields
+		this.userName.value = Storage.getCurrentUserName()
+		this.updateHistoryList()
+		this.setColor(null)
+		this.serviceName.value = ''
 	},
 	onaftershow: function () {
 		// Focus the best field

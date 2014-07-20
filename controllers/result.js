@@ -1,9 +1,46 @@
-/*globals Screens, Pash*/
+/*globals Screens, Pash, Storage*/
 'use strict'
 
 Screens.addController('result', {
+	// Auto-exit interval
+	interval: null,
+
+	// Store received data
+	data: null,
+
+	// Store the current selected format and length element
+	format: null,
+	length: null,
+
+	// Set the selected format as the given element
+	setFormat: function (value) {
+		if (this.format) {
+			this.format.classList.remove('option-selected')
+		}
+		this.format = value
+		this.format.classList.add('option-selected')
+	},
+
+	// Set the selected length as the given element
+	setLength: function (value) {
+		if (this.length) {
+			this.length.classList.remove('option-selected')
+		}
+		this.length = value
+		this.length.classList.add('option-selected')
+	},
+
+	updateResult: function () {
+		var format = Number(this.format.dataset.id),
+			length = Number(this.length.dataset.id),
+			that = this
+		this.data.pash.generatePassword(format, length, function (pass) {
+			that.$('result').textContent = pass
+		})
+	},
+
 	oninit: function () {
-		var _decoder, _length, that = this
+		var that = this
 
 		this.$('back').onclick = function () {
 			Screens.show('generate', null, true)
@@ -20,79 +57,42 @@ Screens.addController('result', {
 			window.getSelection().addRange(range)
 		}
 
-		this.updateResult = function () {
-			var format = Number(that.decoder.dataset.id),
-				length = Number(that.length.dataset.id)
-			that.pash.generatePassword(format, length, function (pass) {
-				that.$('result').textContent = pass
-			})
-		}
-
-		// Create decoder and length properties
-		_decoder = null
-		_length = null
-		Object.defineProperty(this, 'decoder', {
-			get: function () {
-				return _decoder
-			},
-			set: function (value) {
-				if (_decoder) {
-					_decoder.classList.remove('option-selected')
-				}
-				_decoder = value
-				_decoder.classList.add('option-selected')
-			}
-		})
-		Object.defineProperty(this, 'length', {
-			get: function () {
-				return _length
-			},
-			set: function (value) {
-				if (_length) {
-					_length.classList.remove('option-selected')
-				}
-				_length = value
-				_length.classList.add('option-selected')
-			}
-		})
-
-		this.$('decoder-standard').onclick =
-			this.$('decoder-numeric').onclick =
-			this.$('decoder-strong').onclick = function (event) {
-				that.decoder = event.currentTarget
-				that.serviceData.decoder = Number(that.decoder.dataset.id)
+		this.$('format-standard').onclick =
+			this.$('format-numeric').onclick =
+			this.$('format-strong').onclick = function (event) {
+				that.setFormat(event.currentTarget)
+				that.data.service.format = Number(that.format.dataset.id)
+				Storage.save()
 				that.updateResult()
 		}
 		this.$('length-short').onclick =
 			this.$('length-medium').onclick =
 			this.$('length-long').onclick = function (event) {
-				that.length = event.currentTarget
-				that.serviceData.length = Number(that.length.dataset.id)
+				that.setLength(event.currentTarget)
+				that.data.service.length = Number(that.length.dataset.id)
+				Storage.save()
 				that.updateResult()
 		}
 	},
 	// data is an object: {pash: Pash, userName: string, service: service, cssColor: string}
-	// service is an object: {name: string, color: string, hitCount: int, decoder, length}
 	onbeforeshow: function (data) {
-		// Output format
-		this.serviceData = data.service
+		this.data = data
 
-		if (data.service.decoder === Pash.FORMAT.NUMERIC) {
-			this.decoder = this.$('decoder-numeric')
-		} else if (data.service.decoder === Pash.FORMAT.STRONG) {
-			this.decoder = this.$('decoder-strong')
+		if (data.service.format === Pash.FORMAT.NUMERIC) {
+			this.setFormat(this.$('format-numeric'))
+		} else if (data.service.format === Pash.FORMAT.STRONG) {
+			this.setFormat(this.$('format-strong'))
 		} else {
-			this.decoder = this.$('decoder-standard')
+			this.setFormat(this.$('format-standard'))
 		}
 
-		if (data.service.length === Pash.length.SHORT) {
-			this.length = this.$('length-short')
-		} else if (data.service.length === Pash.length.LONG) {
-			this.length = this.$('length-long')
+		if (data.service.length === Pash.LENGTH.SHORT) {
+			this.setLength(this.$('length-short'))
+		} else if (data.service.length === Pash.LENGTH.LONG) {
+			this.setLength(this.$('length-long'))
 		} else {
-			this.length = this.$('length-medium')
+			this.setLength(this.$('length-medium'))
 		}
-		this.pash = data.pash
 
 		// Populate the interface
 		this.$('name').textContent = data.userName
@@ -111,8 +111,7 @@ Screens.addController('result', {
 		clearTimeout(this.interval)
 	},
 	onafterhide: function () {
-		this.serviceData = null
-		this.pash = null
+		this.data = null
 		this.$('result').textContent = ''
 	}
 })

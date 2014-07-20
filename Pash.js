@@ -52,6 +52,9 @@ Output length and entropy:
 |Strong   |7 chars |14 chars |21 chars |
 |(Aa0$)   |35 bits |71 bits  |105 bits |
 +---------+--------+---------+---------+
+|Raw      |64 chars                    |
+|(hex)    |256 bits                    |
++---------+----------------------------+
 
 The formatting algorithm is defined as follows:
 1. start with empty string
@@ -118,6 +121,15 @@ Pash.prototype.generatePassword = function (format, length, callback) {
 	Pash._callbacks[tag] = callback
 }
 
+// Generate a key for internal use for Pash
+// color is one of Pash.COLOR.* constants
+// callback(pass) will be called when done
+// pass is the resulting string
+Pash.prototype.generatePashKey = function (color, callback) {
+	var pash = new Pash(this._masterPassword, this._userName, 'pash', color)
+	pash.generatePassword(Pash.FORMAT.RAW, null, callback)
+}
+
 // Color constants
 Pash.COLOR = {
 	RED: 'red',
@@ -137,7 +149,8 @@ Pash.LENGTH = {
 Pash.FORMAT = {
 	STANDARD: 0,
 	NUMERIC: 1,
-	STRONG: 2
+	STRONG: 2,
+	RAW: 3
 }
 
 /*

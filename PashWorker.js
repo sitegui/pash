@@ -23,6 +23,8 @@ self.onmessage = function (event) {
 		result = pash.getStandardPassword(data.length)
 	} else if (data.format === Pash.FORMAT.STRONG) {
 		result = pash.getStrongPassword(data.length)
+	} else if (data.format === Pash.FORMAT.RAW) {
+		result = pash.getRawPassword()
 	} else {
 		result = ''
 	}
@@ -52,7 +54,8 @@ function Pash(masterPassword, userName, serviceName, color) {
 Pash.FORMAT = {
 	STANDARD: 0,
 	NUMERIC: 1,
-	STRONG: 2
+	STRONG: 2,
+	RAW: 3
 }
 
 // Return a string with at least 1 upper-case letter, 1 lower-case letter and 1 digit
@@ -116,6 +119,11 @@ Pash.prototype.getStrongPassword = function (length) {
 	} while (!hasA || !hasa || !has0 || !has$) // Try again
 
 	return str
+}
+
+// Return a string with 64 hex chars
+Pash.prototype.getRawPassword = function () {
+	return this.getKeyBlock(0).toString()
 }
 
 /*

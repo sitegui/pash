@@ -21,7 +21,11 @@ Screens.addController('result', {
 		}
 
 		this.updateResult = function () {
-			that.$('result').textContent = Pash.decodeRawPassword(that.raw, Number(that.decoder.dataset.id), Number(that.length.dataset.id))
+			var format = Number(that.decoder.dataset.id),
+				length = Number(that.length.dataset.id)
+			that.pash.generatePassword(format, length, function (pass) {
+				that.$('result').textContent = pass
+			})
 		}
 
 		// Create decoder and length properties
@@ -67,13 +71,15 @@ Screens.addController('result', {
 				that.updateResult()
 		}
 	},
+	// data is an object: {pash: Pash, userName: string, service: service, cssColor: string}
+	// service is an object: {name: string, color: string, hitCount: int, decoder, length}
 	onbeforeshow: function (data) {
 		// Output format
 		this.serviceData = data.service
 
-		if (data.service.decoder === Pash.decoder.NUMERIC) {
+		if (data.service.decoder === Pash.FORMAT.NUMERIC) {
 			this.decoder = this.$('decoder-numeric')
-		} else if (data.service.decoder === Pash.decoder.STRONG) {
+		} else if (data.service.decoder === Pash.FORMAT.STRONG) {
 			this.decoder = this.$('decoder-strong')
 		} else {
 			this.decoder = this.$('decoder-standard')
@@ -86,7 +92,7 @@ Screens.addController('result', {
 		} else {
 			this.length = this.$('length-medium')
 		}
-		this.raw = data.raw
+		this.pash = data.pash
 
 		// Populate the interface
 		this.$('name').textContent = data.userName
@@ -106,7 +112,7 @@ Screens.addController('result', {
 	},
 	onafterhide: function () {
 		this.serviceData = null
-		this.raw = null
+		this.pash = null
 		this.$('result').textContent = ''
 	}
 })

@@ -1,4 +1,4 @@
-/*globals Screens, _, Storage, CryptoJS, measurePasswordStrength, Pash*/
+/*globals Screens, _, _data, saveData, measurePasswordStrength, Pash*/
 'use strict'
 
 Screens.addController('generate', {
@@ -34,7 +34,7 @@ Screens.addController('generate', {
 
 	// Try to generate password from the input values
 	generate: function () {
-		var i, service, hashedMasterKey, mayBeWrong, resultData
+		var i, service, resultData
 
 		// Validate
 		var userName = this.userName.value
@@ -72,8 +72,8 @@ Screens.addController('generate', {
 		var cssColor = this.color.dataset.cssColor
 		var color = this.color.id
 
-		// Generate raw value
-		var raw = Pash.generateRawPassword(userName, masterKey, serviceName, color)
+		// Create pash object
+		var pash = new Pash(masterKey, userName, serviceName, color)
 
 		// Save basic info into _data
 		_data.userName = userName
@@ -85,47 +85,24 @@ Screens.addController('generate', {
 				break
 			}
 		}
-
-		mayBeWrong = false
 		if (i === _data.services.length) {
-			hashedMasterKey = Pash._applyStrongDecoder(CryptoJS.SHA256(masterKey), Pash.length.LONG)
 			service = {
 				name: serviceName,
 				color: color,
 				hitCount: 1,
-				decoder: Pash.decoder.STANDARD,
-				length: Pash.length.MEDIUM
+				decoder: Pash.FORMAT.STANDARD,
+				length: Pash.LENGTH.MEDIUM
 			}
-
-			// Compare the used key with the previous
-			if (_data.lastUsedMasterKeyHashed) {
-				mayBeWrong = hashedMasterKey !== _data.lastUsedMasterKeyHashed
-			} else {
-				_data.lastUsedMasterKeyHashed = hashedMasterKey
-			}
-
-			if (!mayBeWrong) {
-				_data.services.push(service)
-			}
+			_data.services.push(service)
 		}
 		saveData()
 
-		// Create the raw pack
-		resultData = {
-			raw: raw,
+		Screens.show('result', {
+			pash: pash,
 			userName: userName,
 			service: service,
 			cssColor: cssColor
-		}
-		if (mayBeWrong) {
-			Screens.show('change-master-key', {
-				resultData: resultData,
-				hashedMasterKey: hashedMasterKey,
-				service: service
-			})
-		} else {
-			Screens.show('result', resultData)
-		}
+		})
 	},
 	oninit: function () {
 		var that = this

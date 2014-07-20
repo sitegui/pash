@@ -102,8 +102,10 @@ Screens.addController('generate', {
 				Screens.show('change-master-key', {
 					pash: pash,
 					userName: userName,
-					service: service,
-					cssColor: cssColor
+					serviceName: serviceName,
+					color: color,
+					cssColor: cssColor,
+					key: key
 				})
 			}
 		})
@@ -240,12 +242,15 @@ Screens.addController('generate', {
 			}
 		})
 	},
-	onbeforeshow: function () {
+	// options is an optional object with keys: color, serviceName
+	onbeforeshow: function (options) {
+		options = options || {}
+
 		// Reset fields
 		this.userName.value = Storage.getCurrentUserName()
 		this.updateHistoryList()
-		this.setColor(null)
-		this.serviceName.value = ''
+		this.setColor(options.color ? this.$(options.color) : null)
+		this.serviceName.value = options.serviceName || ''
 	},
 	onaftershow: function () {
 		// Focus the best field

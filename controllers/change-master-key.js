@@ -2,19 +2,26 @@
 'use strict'
 
 Screens.addController('change-master-key', {
+	// Store received data
+	data: null,
+
 	oninit: function () {
 		var that = this
 		this.$('try-again').onclick = function () {
-			var data = {
-				serviceName: that.serviceData.name,
-				color: that.serviceData.color
-			}
-			Screens.show('generate', data, true)
+			Screens.show('generate', {
+				serviceName: that.data.serviceName,
+				color: that.data.color
+			}, true)
 		}
 		this.$('its-ok').onclick = function () {
-			_data.lastUsedMasterKeyHashed = that.hashedMasterKey
-			_data.services.push(that.serviceData)
-			Screens.show('result', that.resultData)
+			var data = that.data,
+				service = Storage.useService(data.userName, data.key, data.serviceName, data.color, true)
+			Screens.show('result', {
+				pash: data.pash,
+				userName: data.userName,
+				service: service,
+				cssColor: data.cssColor
+			})
 		}
 		this.$('info-button').onclick = function () {
 			that.$('info').style.display = 'inherit'
@@ -22,20 +29,17 @@ Screens.addController('change-master-key', {
 			that.updateHeight()
 		}
 	},
+	// data is an object: {pash: Pash, userName: string, serviceName: string, color: string, cssColor: string, key: string}
 	onbeforeshow: function (data) {
-		this.serviceData = data.service
-		this.hashedMasterKey = data.hashedMasterKey
-		this.resultData = data.resultData
+		this.data = data
 		this.$('info').style.display = 'none'
 		this.$('info-button').style.display = ''
-		this.$('current').textContent = _data.lastUsedMasterKeyHashed
-		this.$('new').textContent = data.hashedMasterKey
+		this.$('current').textContent = Storage.getUserData(data.userName).key
+		this.$('new').textContent = data.key
 	},
 	onafterhide: function () {
-		this.serviceData = null
-		this.hashedMasterKey = null
-		this.resultData = null
-		this.$('current').textContent = _data.lastUsedMasterKeyHashed
-		this.$('new').textContent = data.hashedMasterKey
+		this.data = null
+		this.$('current').textContent = ''
+		this.$('new').textContent = ''
 	}
 })

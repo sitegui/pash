@@ -175,12 +175,13 @@ Storage.getColorForService = function (user, service) {
 // Return the service data or null if the key is wrong
 // userName, key, serviceName and color are strings
 // key is the pash black key
-Storage.useService = function (userName, key, serviceName, color) {
+// Force is an optional bool that, if true, turn off key check and overwrite it
+Storage.useService = function (userName, key, serviceName, color, force) {
 	var userData = Storage.getUserData(userName, true),
 		serviceData = Storage.getServiceData(userName, serviceName, color)
 
-	if (!userData.key) {
-		// New user
+	if (!userData.key || force) {
+		// New user or forced
 		userData.key = key
 	} else if (userData.key !== key) {
 		// Probably the user typed his master password incorrectly

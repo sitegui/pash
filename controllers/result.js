@@ -3,7 +3,7 @@
 
 Screens.addController('result', {
 	// Auto-exit interval
-	interval: null,
+	timeout: null,
 
 	// Store received data
 	data: null,
@@ -103,7 +103,7 @@ Screens.addController('result', {
 		this.updateResult()
 
 		// Display timeout (for security reasons)
-		this.interval = setTimeout(function () {
+		this.timeout = setTimeout(function () {
 			Screens.show('generate', null, true)
 		}, 60e3)
 	},

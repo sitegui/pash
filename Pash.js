@@ -3,31 +3,33 @@
 /*
 PASH algorithm:
 
-`       Color ---------------------+
-`Service name -----------+         |            Length -------+
-`   User name -+         |         |       Format type -+     |
-`              |         |         |                    |     |
-`        ######|#########|#########|######              V     V
-`        #     V         V         V     #        ###################
-Master   #  +-----+ A +-----+ B +-----+  #  Key   #                 # Password
------------>|PBKDF|-->|PBKDF|-->|PBKDF|---------->#    FORMATTING   #---------->
-password #  +-----+   +-----+   +-----+  # Stream #                 #
-`        #      KEY DERIVATION BLOCK     #        ###################
-`        #################################
+`       Color --->#####
+`Service name ---># F #              Length -------+
+`   User name --->#####         Format type -+     |
+`                   |                        |     |
+`        ###########|##########              V     V
+`        #          V         #        ###################
+Master   #       +-----+      #  Key   #                 # Password
+---------------->|PBKDF|-------------->#    FORMATTING   #---------->
+password #       +-----+      # Stream #                 #
+`        #   KEY DERIVATION   #        ###################
+`        ######################
 
-For each PBKDF block:
+In the PBKDF block:
 * The key input is the one at the left
 * The salt input is the one at the top
-* The parameters are: HMAC-SHA256, 1000 rounds
+* The parameters are: HMAC-SHA256, 1e4 rounds
 * The output length is not explicitly defined, it depends on how much the formatting block needs
 
 All three salt inputs (userName, serviceName and color) are normalized:
-normalize(S) := lower-case(strip-spaces(S))
+	normalize(S) := lower-case(strip-spaces(S))
+And then combined with the function F:
+	F(userName, serviceName, color) := userName || '\n' || serviceName || '\n' || color
 
 All strings are represented in UTF-8 binary format
 
 The key derivation block outputs the key stream on blocks of 256 bits. Each of those blocks can be computed independently, that is, the PBKDF used here are slightly different from the standard definition. They don't take the output length as a parameter, but instead the block-index:
-keyBlock[i] = PBKDF(PBKDF(PBKDF(masterPassword, userName, i), serviceName, i), color, i)
+keyBlock[i] = PBKDF(masterPassword, f(userName, serviceName, color), i)
 
 There are 3 output formats:
 * Standard: one upper-case letter followed by lower-case letters and digit
@@ -80,10 +82,14 @@ If not, it must generate the second block and wait again.
 
 */
 
-// Create a new digest for the given inputs
-// userName and serviceName are case insensitive strings
-// masterPassword is the only information the user should retype every time
-// color is one of Pash.COLOR.* constants and is used to let the user get more than one key for one service
+/**
+ * Create a new digest for the given inputs
+ * @class
+ * @param {string} masterPassword the only information the user should retype every time
+ * @param {string} userName case insensitive
+ * @param {string} serviceName case insensitive
+ * @param {string} color one of Pash.COLOR.* constants. This lets the user get more than one key for one service
+ */
 function Pash(masterPassword, userName, serviceName, color) {
 	this._masterPassword = masterPassword
 	this._userName = Pash.normalize(userName)
@@ -91,20 +97,25 @@ function Pash(masterPassword, userName, serviceName, color) {
 	this._color = Pash.normalize(color)
 }
 
-// Return the normalized value for a given string
-// For the pash algorithm, the user name, service are normalized, this implies:
-// PASH('name', '1234', 'gmail', 'red') === PASH('Name', '1234', 'G mail', 'red')
+/**
+ * Return the normalized value for a given string
+ * For the pash algorithm, the user name, service are normalized, this implies:
+ * PASH('name', '1234', 'gmail', 'red') === PASH('Name', '1234', 'G mail', 'red')
+ * @param {string} str
+ * @returns {string}
+ */
 Pash.normalize = function (str) {
 	return str.replace(/\s/g, '').toLowerCase()
 }
 
-// Generate a password with the given outputs
-// format is one of Pash.FORMAT.* constants
-// length is one of Pash.LENGTH.* constants
-// callback(pass) will be called when done
-// pass is the resulting string
-// All work is delegated to a background worker that runs on a background thread
-// The worker will forget about all computed data after done
+/**
+ * Generate a password (asynchronous)
+ * All work is delegated to a background worker that runs on a background thread
+ * The worker will forget about all computed data after done
+ * @param {number} format one of Pash.FORMAT.* constants
+ * @param {number} length one of Pash.LENGTH.* constants
+ * @param {function(string)} callback execute with the result password
+ */
 Pash.prototype.generatePassword = function (format, length, callback) {
 	var tag = String(Math.random())
 
@@ -121,16 +132,20 @@ Pash.prototype.generatePassword = function (format, length, callback) {
 	Pash._callbacks[tag] = callback
 }
 
-// Generate a key for internal use for Pash
-// color is one of Pash.COLOR.* constants
-// callback(pass) will be called when done
-// pass is the resulting string
+/**
+ * Generate a key for internal use for Pash
+ * @param {string} color one of Pash.COLOR.* constants
+ * @param {function(string)} callback
+ */
 Pash.prototype.generatePashKey = function (color, callback) {
 	var pash = new Pash(this._masterPassword, this._userName, 'pash', color)
 	pash.generatePassword(Pash.FORMAT.RAW, null, callback)
 }
 
-// Color constants
+/**
+ * Color constants
+ * @enum {string}
+ */
 Pash.COLOR = {
 	RED: 'red',
 	GREEN: 'green',
@@ -138,14 +153,20 @@ Pash.COLOR = {
 	BLACK: 'black'
 }
 
-// Length constants
+/**
+ * Length constants
+ * @enum {number}
+ */
 Pash.LENGTH = {
 	SHORT: 1,
 	MEDIUM: 2,
 	LONG: 3
 }
 
-// Output format type constants
+/**
+ * Output format type constants
+ * @enum {number}
+ */
 Pash.FORMAT = {
 	STANDARD: 0,
 	NUMERIC: 1,
@@ -153,14 +174,23 @@ Pash.FORMAT = {
 	RAW: 3
 }
 
-/*
-Internals
-*/
-
+/**
+ * @type {Worker}
+ * @private
+ */
 Pash._worker = new Worker('./PashWorker.js')
+
+/**
+ * @type {Object<Function>}
+ * @private
+ */
 Pash._callbacks = Object.create(null)
 
-// Handle generated password message
+/**
+ * Handle generated password message
+ * @param {Event} event
+ * @private
+ */
 Pash._worker.onmessage = function (event) {
 	var tag = event.data.tag,
 		result = event.data.result,

@@ -16,6 +16,6 @@
 		"node": ">=0.10"
 	},
 	"scripts": {
-		"test": "mocha -R spec -b"
+		"test": "mocha -R spec"
 	}
 }

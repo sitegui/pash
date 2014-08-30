@@ -1,4 +1,4 @@
-/*globals Screens, _, resetData, Lang*/
+/*globals Screens, _, Storage, Lang*/
 'use strict'
 
 Screens.addController('options', {
@@ -10,7 +10,7 @@ Screens.addController('options', {
 		// Set footer buttons
 		this.$('clear').onclick = function () {
 			if (confirm(_('options.confirmClear'))) {
-				resetData()
+				Storage.reset()
 				location.reload(false)
 			}
 		}

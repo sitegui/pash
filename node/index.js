@@ -43,28 +43,23 @@ function KeyStream(password, userName, serviceName, color) {
 
 	this._bits = []
 	this._password = new Buffer(password)
-	this._userName = new Buffer(normalize(userName))
-	this._serviceName = new Buffer(normalize(serviceName))
-	this._color = new Buffer(normalize(color))
+	this._salt = new Buffer(normalize(userName) + '\n' + normalize(serviceName) + '\n' + normalize(color))
 	this._blockIndex = 0
 
 }
 
 // Make the new block and add it to bits array
 KeyStream.prototype._getBlock = function () {
-
-	var A = PBKDF(this._password, this._userName, this._blockIndex),
-		B = PBKDF(A, this._serviceName, this._blockIndex),
-		C = PBKDF(B, this._color, this._blockIndex)
+	var A = PBKDF(this._password, this._salt, this._blockIndex)
 	this._blockIndex++
 
 	var i, j
-	for (i = 0; i < C.length; i++) {
+	for (i = 0; i < A.length; i++) {
 		for (j = 7; j >= 0; j--) {
-			this._bits.push((C[i] >> j) & 1)
+			this._bits.push((A[i] >> j) & 1)
 		}
 	}
-	return C
+	return A
 }
 
 KeyStream.prototype.getChar = function (alphabet) {
@@ -128,7 +123,7 @@ function HMACSHA256(key, message) {
 function PBKDF(key, salt, blockIndex) {
 
 	var i, j,
-		interations = 1000,
+		interations = 1e4,
 		result,
 		previous = new Buffer(32),
 		blockIndexBuffer = new Buffer(4)
@@ -144,7 +139,6 @@ function PBKDF(key, salt, blockIndex) {
 	}
 
 	return result
-
 }
 
 //password, userName, serviceName, color are strings

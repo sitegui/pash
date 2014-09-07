@@ -1,7 +1,7 @@
 CACHE MANIFEST
 
 # Pash
-# Version 2.0.3
+# Version 2.1.0
 # Guilherme de Oliveira Souza
 # http://sitegui.com.br
 
@@ -9,8 +9,6 @@ css.css
 icon.png
 layout.js
 Pash.js
-PashWorker.js
-pbkdf_min.js
 Screens.js
 Storage.js
 strength.js
@@ -26,3 +24,7 @@ controllers/welcome.js
 lang/en.js
 lang/Lang.js
 lang/pt-br.js
+worker/Cipher.js
+worker/PashWorker.js
+worker/pbkdf_min.js
+worker/Util.js

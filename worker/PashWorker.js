@@ -1,8 +1,8 @@
-/*globals Module, importScripts, self*/
+/*globals Module, importScripts, self, Util, Cipher*/
 'use strict'
 
 // Import and bind pbkdf
-importScripts('pbkdf_min.js')
+importScripts('pbkdf_min.js', 'Util.js', 'Cipher.js')
 
 /**
  * Implemented by https://github.com/sitegui/pbkdf-sha256-asm/
@@ -25,35 +25,32 @@ var alphabets = {
 	$: '!#$%&()*+,-./:;<=>?@[]_{|}'
 }
 
-/** @type {Object<number>} */
-var hexMap = Object.create(null)
-
-var i, j
-for (i = 0; i < 16; i++) {
-	for (j = 0; j < 16; j++) {
-		hexMap[i.toString(16) + j.toString(16)] = 16 * i + j
-	}
-}
-
 /**
  * Treat an incoming message to apply the PASH algorithm
  * @param {Event} event
  */
 self.onmessage = function (event) {
 	var data = event.data,
-		pash = new Pash(data.masterPassword, data.userName, data.serviceName, data.color),
-		result
+		result = '',
+		pash, key
 
-	if (data.format === Pash.FORMAT.NUMERIC) {
-		result = pash.getNumericPassword(data.length)
-	} else if (data.format === Pash.FORMAT.STANDARD) {
-		result = pash.getStandardPassword(data.length)
-	} else if (data.format === Pash.FORMAT.STRONG) {
-		result = pash.getStrongPassword(data.length)
-	} else if (data.format === Pash.FORMAT.RAW) {
-		result = pash.getRawPassword()
-	} else {
-		result = ''
+	if (data.action === 'password') {
+		pash = new Pash(data.masterPassword, data.userName, data.serviceName, data.color)
+		if (data.format === Pash.FORMAT.NUMERIC) {
+			result = pash.getNumericPassword(data.length)
+		} else if (data.format === Pash.FORMAT.STANDARD) {
+			result = pash.getStandardPassword(data.length)
+		} else if (data.format === Pash.FORMAT.STRONG) {
+			result = pash.getStrongPassword(data.length)
+		} else if (data.format === Pash.FORMAT.RAW) {
+			result = pash.getRawPassword()
+		}
+	} else if (data.action === 'encrypt') {
+		key = new Pash(data.masterPassword, data.userName, 'pash', 'red').getRawPassword()
+		result = Cipher.encrypt(key, data.plaintext)
+	} else if (data.action === 'decrypt') {
+		key = new Pash(data.masterPassword, data.userName, 'pash', 'red').getRawPassword()
+		result = Cipher.decrypt(key, data.ciphertext)
 	}
 
 	self.postMessage({
@@ -253,14 +250,9 @@ Pash.prototype.chooseRandom = function (array) {
  * @returns {Uint8Array|string} with 256 bits (32 bytes)
  */
 Pash.prototype.getKeyBlock = function (index, returnAsString) {
-	var hexStr = pbkdf(this.masterPassword, this.salt, index, 1e4),
-		block, i
+	var hexStr = pbkdf(this.masterPassword, this.salt, index, 1e4)
 	if (returnAsString) {
 		return hexStr
 	}
-	block = new Uint8Array(32)
-	for (i = 0; i < 32; i++) {
-		block[i] = hexMap[hexStr.substr(2 * i, 2)]
-	}
-	return block
+	return Util.i8ArrFromHex(hexStr)
 }

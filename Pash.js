@@ -105,7 +105,7 @@ function Pash(masterPassword, userName, serviceName, color) {
  * @returns {string}
  */
 Pash.normalize = function (str) {
-	return str.replace(/\s/g, '').toLowerCase()
+	return String(str).replace(/\s/g, '').toLowerCase()
 }
 
 /**
@@ -120,6 +120,7 @@ Pash.prototype.generatePassword = function (format, length, callback) {
 	var tag = String(Math.random())
 
 	Pash._worker.postMessage({
+		action: 'password',
 		masterPassword: this._masterPassword,
 		userName: this._userName,
 		serviceName: this._serviceName,
@@ -134,12 +135,54 @@ Pash.prototype.generatePassword = function (format, length, callback) {
 
 /**
  * Generate a key for internal use for Pash
+ * black -> key to check master key correctness
+ * red -> encryption/decryption key
  * @param {string} color one of Pash.COLOR.* constants
  * @param {function(string)} callback
  */
 Pash.prototype.generatePashKey = function (color, callback) {
 	var pash = new Pash(this._masterPassword, this._userName, 'pash', color)
 	pash.generatePassword(Pash.FORMAT.RAW, null, callback)
+}
+
+/**
+ * Encrypt the given plaintext (as explained in encryption.md)
+ * The resulting cipher text is a hex-encoded string
+ * @param {string} plaintext
+ * @param {function(string)} callback
+ */
+Pash.prototype.encrypt = function (plaintext, callback) {
+	var tag = String(Math.random())
+
+	Pash._worker.postMessage({
+		action: 'encrypt',
+		masterPassword: this._masterPassword,
+		userName: this._userName,
+		plaintext: plaintext,
+		tag: tag
+	})
+
+	Pash._callbacks[tag] = callback
+}
+
+/**
+ * Decrypt the given ciphertext
+ * The resulting plaintext will be null if any error occurred
+ * @param {string} ciphertext a hex encoded-string
+ * @param {function(?string)} callback
+ */
+Pash.prototype.decrypt = function (ciphertext, callback) {
+	var tag = String(Math.random())
+
+	Pash._worker.postMessage({
+		action: 'decrypt',
+		masterPassword: this._masterPassword,
+		userName: this._userName,
+		ciphertext: ciphertext,
+		tag: tag
+	})
+
+	Pash._callbacks[tag] = callback
 }
 
 /**
@@ -178,7 +221,7 @@ Pash.FORMAT = {
  * @type {Worker}
  * @private
  */
-Pash._worker = new Worker('./PashWorker.js')
+Pash._worker = new Worker('./worker/PashWorker.js')
 
 /**
  * @type {Object<Function>}

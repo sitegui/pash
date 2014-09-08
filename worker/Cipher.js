@@ -5,6 +5,65 @@
 /*globals Module, Util*/
 'use strict'
 
+/*
+Encryption construction
+
+Timestamp ---+
+ (NONCE)     |
+             v
+         +-------+
+  KEY--->|> HMAC |--+-----------+----------------------+----------- ... ---------+
+         +-------+  |           v                      v                         v
+                    |  +-------------------+  +-------------------+     +-------------------+
+                    |  | Iv (256 bits) | 0 |  | Iv (256 bits) | 1 | ... | Iv (256 bits) | N |
+                    |  +-------------------+  +-------------------+     +-------------------+
+            +-------+            v                      v                         v
+            |                +-------+              +-------+                 +-------+
+            |         KEY--->|> HMAC |       KEY--->|> HMAC |          KEY--->|> HMAC |
+            |                +-------+              +-------+                 +-------+
+            |                    v                      v                         v
+            |           +-----------------+    +-----------------+       +-----------------+
+            |           |  PAD (256 bits) |    |  PAD (256 bits) |  ...  |  PAD (256 bits) |
+            |           +-----------------+    +-----------------+       +-----------------+
+            |                    v                      v                         v
+            |                   XOR---------+          XOR---------+            XOR------+
+            |                    ^          |           ^          |            ^        |
+            |           +-----------------+ |  +-----------------+ |     +-------------+ |
+            |           |    MESSAGE[0]   | |  |    MESSAGE[1]   | |     |  MESSAGE[N] | |
+            |           +-----------------+ |  +-----------------+ |     +-------------+ |
+            v                               |                      |                     |
+    +---------------+   +-----------------+ |  +-----------------+ |     +-------------+ |   +-----+
+    | IV (256 bits) |   |  CIPHERTEXT[0]  |<+  |  CIPHERTEXT[1]  |<+     |CIPHERTEXT[N]|<+   | TAG |
+    +---------------+   +-----------------+    +-----------------+       +-------------+     +-----+
+   |                                                                                     |      ^
+   +--------------------------------------------------------------- ... -----------------+      |
+                                            v                                                   |
+                                        +-------+                                               |
+                                 KEY--->|> HMAC |-----------------------------------------------+
+                                        +-------+
+
+The encryption follows the encrypt-then-mac logic, using counter mode to generate a pad that is xored with the message.
+
+Given the lack of a CSPRNG in the browser, the IV is the output of HMAC on a nonce
+(here the timestamp with milliseconds resolution is used).
+
+The counter is a 32-bit word, starting with zero.
+
+Only one key is used to:
+1. derive a pseudo-random IV
+2. generate the pad
+3. MAC
+
+Since all 3 parts are based on HMAC-SHA256, using different keys would add no value.
+That is, if someone could break any of the 3 uses above,
+he could then easily break the other 2 even if different keys were used.
+
+The decryption is very similar to the encryption, except:
+* the MAC tag is checked
+* the IV is taken from the first 256bits
+
+*/
+
 var Cipher = {}
 
 /**

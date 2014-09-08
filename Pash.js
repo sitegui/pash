@@ -146,7 +146,7 @@ Pash.prototype.generatePashKey = function (color, callback) {
 }
 
 /**
- * Encrypt the given plaintext (as explained in encryption.md)
+ * Encrypt the given plaintext (see doc at Cipher.js)
  * The resulting cipher text is a hex-encoded string
  * @param {string} plaintext
  * @param {function(string)} callback

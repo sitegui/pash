@@ -88,6 +88,7 @@ Screens.addController('generate', {
 
 		// Generate pash black key that will be used to check if the masterKey was typed right
 		pash.generatePashKey(Pash.COLOR.BLACK, function (key) {
+			key = key.substr(0, 7)
 			var service = Storage.useService(userName, key, serviceName, color)
 			if (service) {
 				// All good, go to result screen to generate the password

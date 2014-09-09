@@ -130,14 +130,13 @@ Lang.addPack({
 		credits: {
 			title: 'Credits',
 			line1: 'Made by <a href=\'http://sitegui.com.br\'>Guilherme Souza</a>',
-			line2: 'Thanks <a href=\'https://github.com/sitegui/pash\'>GitHub</a> for hosting the code and <a href=\'http://code.google.com/p/crypto-js/\'>CryptoJS</a> for the SHA-256 JavaScript implementation',
-			line3: 'Please <a href=\'http://sitegui.com.br/fale_conosco/?assunto=pash\'>get in touch</a> if you have any comments or wanna help translate or port the project for other plataforms',
+			line2: 'Thanks <a href=\'https://github.com/sitegui/pash\'>GitHub</a> for hosting the code',
+			line3: 'Please <a href=\'http://sitegui.com.br/fale_conosco/?assunto=pash\'>get in touch</a> if you have any comments or wanna help translate or port the project for other platforms',
 			home: 'Home'
 		},
 		options: {
 			title: 'Options',
 			home: 'Home',
-			install: 'Install Firefox app',
 			clear: 'Clear all my data',
 			confirmClear: 'This will clear all you saved data (your name and your services).\nAre you sure?',
 			installError: 'This function is only available in Firefox (Desktop or Android)',

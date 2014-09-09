@@ -15,27 +15,6 @@ Screens.addController('options', {
 			}
 		}
 
-		// Control the install button
-		var request, that = this
-		if (navigator.mozApps) {
-			request = navigator.mozApps.getInstalled()
-			request.onsuccess = function () {
-				if (request.result[0]) {
-					setTimeout(function () {
-						request.result[0].checkForUpdate()
-					}, 15e3)
-					that.$('install').style.display = 'none'
-				}
-			}
-		}
-		this.$('install').onclick = function () {
-			if (navigator.mozApps) {
-				navigator.mozApps.install('/webapp.webapp')
-			} else {
-				alert(_('options.installError'))
-			}
-		}
-
 		// Populate language options
 		var element, langs, i, option, current
 		langs = Lang.getPackNames()

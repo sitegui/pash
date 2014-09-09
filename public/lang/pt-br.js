@@ -129,14 +129,13 @@ Lang.addPack({
 		credits: {
 			title: 'Créditos',
 			line1: 'Feito por <a href=\'http://sitegui.com.br\'>Guilherme Souza</a>',
-			line2: 'Obrigado <a href=\'https://github.com/sitegui/pash\'>GitHub</a> por hospedar o código e <a href=\'http://code.google.com/p/crypto-js/\'>CryptoJS</a> pela implementação de SHA-256 em JavaScript',
+			line2: 'Obrigado <a href=\'https://github.com/sitegui/pash\'>GitHub</a> por hospedar o código',
 			line3: 'Por favor, <a href=\'http://sitegui.com.br/fale_conosco/?assunto=pash\'>entre em contato</a> caso tenha qualquer comentário ou gostaria de traduzir ou portar o projeto para qualquer outras plataforma',
 			home: 'Início'
 		},
 		options: {
 			title: 'Opções',
 			home: 'Início',
-			install: 'Instalar aplicativo para Firefox',
 			clear: 'Limpar todos meus dados',
 			confirmClear: 'Isso irá excluir todos seus dados salvos (seu nome e os serviços usados).\nTem certeza?',
 			installError: 'Essa função só está disponível no Firefox (desktop ou Android)',

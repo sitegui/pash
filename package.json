@@ -10,7 +10,9 @@
 	},
 	"keywords": [],
 	"dependencies": {
-		"express": "^4.8.8"
+		"body-parser": "^1.8.1",
+		"express": "^4.8.8",
+		"mongoose": "^3.8.16"
 	},
 	"license": "MIT",
 	"engines": {

@@ -12,14 +12,14 @@ Timestamp ---+
  (NONCE)     |
              v
          +-------+
-  KEY--->|> HMAC |--+-----------+----------------------+----------- ... ---------+
+ KEY1--->|> HMAC |--+-----------+----------------------+----------- ... ---------+
          +-------+  |           v                      v                         v
                     |  +-------------------+  +-------------------+     +-------------------+
                     |  | Iv (256 bits) | 0 |  | Iv (256 bits) | 1 | ... | Iv (256 bits) | N |
                     |  +-------------------+  +-------------------+     +-------------------+
             +-------+            v                      v                         v
             |                +-------+              +-------+                 +-------+
-            |         KEY--->|> HMAC |       KEY--->|> HMAC |          KEY--->|> HMAC |
+            |        KEY2--->|> HMAC |      KEY2--->|> HMAC |         KEY2--->|> HMAC |
             |                +-------+              +-------+                 +-------+
             |                    v                      v                         v
             |           +-----------------+    +-----------------+       +-----------------+
@@ -39,7 +39,7 @@ Timestamp ---+
    +--------------------------------------------------------------- ... -----------------+      |
                                             v                                                   |
                                         +-------+                                               |
-                                 KEY--->|> HMAC |-----------------------------------------------+
+                                KEY3--->|> HMAC |-----------------------------------------------+
                                         +-------+
 
 The encryption follows the encrypt-then-mac logic, using counter mode to generate a pad that is xored with the message.
@@ -49,14 +49,10 @@ Given the lack of a CSPRNG in the browser, the IV is the output of HMAC on a non
 
 The counter is a 32-bit word, starting with zero.
 
-Only one key is used to:
-1. derive a pseudo-random IV
-2. generate the pad
-3. MAC
-
-Since all 3 parts are based on HMAC-SHA256, using different keys would add no value.
-That is, if someone could break any of the 3 uses above,
-he could then easily break the other 2 even if different keys were used.
+One main key is used to derive 3 keys with HMAC(mainKey, keyName):
+1. derive a pseudo-random IV (keyName = 'iv')
+2. generate the pad (keyName = 'pad')
+3. MAC (keyName = 'mac')
 
 The decryption is very similar to the encryption, except:
 * the MAC tag is checked
@@ -73,12 +69,13 @@ var Cipher = {}
  */
 Cipher.encrypt = function (key, plaintext) {
 	var nonce = new Date().toISOString(),
-		iv = Cipher._hmac(key, Util.hexEncodeStr(nonce)),
+		keys = Cipher._deriveKeys(key),
+		iv = Cipher._hmac(keys.iv, Util.hexEncodeStr(nonce)),
 		body, tag
 
 	plaintext = Util.hexEncodeStr(plaintext)
-	body = Cipher._core(key, iv, plaintext)
-	tag = Cipher._hmac(key, iv + body)
+	body = Cipher._core(keys.pad, iv, plaintext)
+	tag = Cipher._hmac(keys.mac, iv + body)
 	return iv + body + tag
 }
 
@@ -88,26 +85,41 @@ Cipher.encrypt = function (key, plaintext) {
  * @returns {?string} null in case of error
  */
 Cipher.decrypt = function (key, ciphertext) {
-	var iv, tag, body
+	var keys, iv, tag, body
 
 	if (!/^([0-9a-f]{2}){64,}$/i.test(ciphertext)) {
 		// Should be hex-encoded and have at least iv+tag (32 bytes each)
 		return null
 	}
 
+	keys = Cipher._deriveKeys(key)
+
 	// ciphertext := iv || body || tag
 	iv = ciphertext.substr(0, 64)
 	body = ciphertext.substring(64, ciphertext.length - 64)
 	tag = ciphertext.substr(-64)
 
-	if (tag !== Cipher._hmac(key, iv + body)) {
+	if (tag !== Cipher._hmac(keys.mac, iv + body)) {
 		// Invalid tag
 		return null
 	}
 
-	body = Cipher._core(key, iv, body)
+	body = Cipher._core(keys.pad, iv, body)
 
 	return Util.hexDecodeStr(body)
+}
+
+/**
+ * Derive 3 used keys from master key
+ * @param {string} key hex-encoded
+ * @returns {{iv: string, pad: string, mac:string }}
+ */
+Cipher._deriveKeys = function (key) {
+	return {
+		iv: Cipher._hmac('iv', key),
+		pad: Cipher._hmac('pad', key),
+		mac: Cipher._hmac('mac', key)
+	}
 }
 
 /**

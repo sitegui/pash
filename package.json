@@ -10,13 +10,13 @@
 	},
 	"keywords": [],
 	"dependencies": {
-		"body-parser": "^1.8.1",
-		"express": "^4.8.8",
-		"mongoose": "^3.8.16"
+		"body-parser": "^1.15.0",
+		"express": "^4.13.4",
+		"mongoose": "^4.4.5"
 	},
 	"license": "MIT",
 	"engines": {
-		"node": ">=0.10"
+		"node": ">=4.2"
 	},
 	"scripts": {
 		"test": "exit 1"

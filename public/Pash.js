@@ -137,6 +137,7 @@ Pash.prototype.generatePassword = function (format, length, callback) {
  * Generate a key for internal use for Pash
  * black -> key to check master key correctness
  * red -> encryption/decryption key
+ * green -> key to derive service id
  * @param {string} color one of Pash.COLOR.* constants
  * @param {function(string)} callback
  */

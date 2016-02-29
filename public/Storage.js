@@ -50,9 +50,24 @@ Storage.reset = function () {
 	    the number of times this service was used
 	  users[user].services.$.length: int
 	    the selected output length (see Pash.LENGTH)
+	
+	[Version 3]
+	  Compatible with version 2, adding these fields:
+	  users[user].sync: boolean
+	    true if the user wants to use the sync feature
+	  users[user].services.$.id: string
+	    unique string, based on service normalized name and color
+		HMAC(PASH(name, pass, 'pash', 'green'), JSON.stringify([normalName, color]))
+		This is only filled when syncing is performed
+	  users[user].services.$.lastUpdate: int
+	    the timestamp this service was last modified
+	  users[user].services.$.lastHitCount: int
+	    the last observed hitCount when syncing with the server
+	  users[user].removedServices.$: string
+	    the id of the removed services
 	*/
 	Storage.data = {
-		version: 2,
+		version: 3,
 		users: {},
 		welcomed: false,
 		lastUser: ''
@@ -70,12 +85,16 @@ Storage.load = function () {
 
 	try {
 		Storage.data = JSON.parse(data)
-		if (Storage.data.version !== 2) {
+
+		if (Storage.data.version === 2) {
+			Storage.upgradeFromV2()
+		} else if (Storage.data.version !== 3) {
 			throw new Error('Incompatible')
 		}
 	} catch (e) {
 		// Error (corrupted or incompatible data)
 		alert(_('localStorageError'))
+		console.error(e)
 		Storage.reset()
 	}
 }
@@ -114,7 +133,9 @@ Storage.getUserData = function (userName, create) {
 			name: userName,
 			normalName: normalName,
 			key: '',
-			services: []
+			sync: false,
+			services: [],
+			removedServices: []
 		}
 		Storage.save()
 	}
@@ -140,9 +161,12 @@ Storage.getServiceData = function (userName, serviceName, color) {
 		name: serviceName,
 		normalName: serviceNormalName,
 		color: color,
+		id: '',
 		format: Pash.FORMAT.STANDARD,
 		hitCount: 0,
-		length: Pash.LENGTH.MEDIUM
+		length: Pash.LENGTH.MEDIUM,
+		lastUpdate: 0,
+		lastHitCount: 0
 	}
 	data.services.push(service)
 	Storage.save()
@@ -188,8 +212,25 @@ Storage.useService = function (userName, key, serviceName, color, force) {
 		return null
 	}
 
-	serviceData.hitCount++
+	serviceData.hitCount += 1
 	Storage.data.lastUser = userData.normalName
 	Storage.save()
 	return serviceData
+}
+
+/**
+ * Upgrade local data from v2 to v3
+ */
+Storage.upgradeFromV2 = function () {
+	Storage.data.version = 3
+	for (var userName in Storage.data.users) {
+		var user = Storage.data.users[userName]
+		user.sync = false
+		user.removedServices = []
+		user.services.forEach(function (service) {
+			service.id = ''
+			service.lastUpdate = 0
+			service.lastHitCount = 0
+		})
+	}
 }

@@ -116,9 +116,9 @@ Cipher.decrypt = function (key, ciphertext) {
  */
 Cipher._deriveKeys = function (key) {
 	return {
-		iv: Cipher._hmac('iv', key),
-		pad: Cipher._hmac('pad', key),
-		mac: Cipher._hmac('mac', key)
+		iv: Cipher._hmac(Util.hexEncodeStr('pash iv'), key),
+		pad: Cipher._hmac(Util.hexEncodeStr('pash pad'), key),
+		mac: Cipher._hmac(Util.hexEncodeStr('pash mac'), key)
 	}
 }
 

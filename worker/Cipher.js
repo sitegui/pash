@@ -50,9 +50,9 @@ Given the lack of a CSPRNG in the browser, the IV is the output of HMAC on a non
 The counter is a 32-bit word, starting with zero.
 
 One main key is used to derive 3 keys with HMAC(mainKey, keyName):
-1. derive a pseudo-random IV (keyName = 'iv')
-2. generate the pad (keyName = 'pad')
-3. MAC (keyName = 'mac')
+1. derive a pseudo-random IV (keyName = 'pash iv')
+2. generate the pad (keyName = 'pash pad')
+3. MAC (keyName = 'pash mac')
 
 The decryption is very similar to the encryption, except:
 * the MAC tag is checked

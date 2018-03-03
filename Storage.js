@@ -1,8 +1,8 @@
-/*globals _, Pash*/
+/* globals _, Pash*/
 'use strict'
 
 // Global singleton
-var Storage = {}
+let Storage = {}
 
 // Actual storage object
 // The format is described in Storage.reset()
@@ -76,7 +76,7 @@ Storage.reset = function () {
 
 // Load previously saved data from localStorage
 Storage.load = function () {
-	var data = localStorage.getItem('pash-data')
+	let data = localStorage.getItem('pash-data')
 	if (!data) {
 		// Empty storage
 		Storage.reset()
@@ -114,7 +114,7 @@ Storage.setWelcomed = function () {
 
 // Return the name for the current user (or '' if none)
 Storage.getCurrentUserName = function () {
-	var normalName = Storage.data.lastUser
+	let normalName = Storage.data.lastUser
 	if (!normalName || !(normalName in Storage.data.users)) {
 		return ''
 	}
@@ -124,14 +124,14 @@ Storage.getCurrentUserName = function () {
 // Return the data (as an object) for the given user (create the object if needed and create is true)
 // Return null if not found
 Storage.getUserData = function (userName, create) {
-	var normalName = Pash.normalize(userName)
+	let normalName = Pash.normalize(userName)
 	if (!(normalName in Storage.data.users)) {
 		if (!create) {
 			return null
 		}
 		Storage.data.users[normalName] = {
 			name: userName,
-			normalName: normalName,
+			normalName,
 			key: '',
 			sync: false,
 			services: [],
@@ -144,7 +144,7 @@ Storage.getUserData = function (userName, create) {
 
 // Return the data (as an object) for the given service and user (create if needed)
 Storage.getServiceData = function (userName, serviceName, color) {
-	var data = Storage.getUserData(userName, true),
+	let data = Storage.getUserData(userName, true),
 		serviceNormalName = Pash.normalize(serviceName),
 		i, service
 
@@ -160,7 +160,7 @@ Storage.getServiceData = function (userName, serviceName, color) {
 	service = {
 		name: serviceName,
 		normalName: serviceNormalName,
-		color: color,
+		color,
 		id: '',
 		format: Pash.FORMAT.STANDARD,
 		hitCount: 0,
@@ -177,7 +177,7 @@ Storage.getServiceData = function (userName, serviceName, color) {
 // Both user and service are strings
 // Return empty string if not found one exact match
 Storage.getColorForService = function (user, service) {
-	var data = Storage.getUserData(user, true),
+	let data = Storage.getUserData(user, true),
 		foundColor = '',
 		i
 
@@ -201,7 +201,7 @@ Storage.getColorForService = function (user, service) {
 // key is the pash black key
 // Force is an optional bool that, if true, turn off key check and overwrite it
 Storage.useService = function (userName, key, serviceName, color, force) {
-	var userData = Storage.getUserData(userName, true),
+	let userData = Storage.getUserData(userName, true),
 		serviceData = Storage.getServiceData(userName, serviceName, color)
 
 	if (!userData.key || force) {
@@ -223,11 +223,11 @@ Storage.useService = function (userName, key, serviceName, color, force) {
  */
 Storage.upgradeFromV2 = function () {
 	Storage.data.version = 3
-	for (var userName in Storage.data.users) {
-		var user = Storage.data.users[userName]
+	for (let userName in Storage.data.users) {
+		let user = Storage.data.users[userName]
 		user.sync = false
 		user.removedServices = []
-		user.services.forEach(function (service) {
+		user.services.forEach(service => {
 			service.id = ''
 			service.lastUpdate = 0
 			service.lastHitCount = 0

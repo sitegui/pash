@@ -1,4 +1,4 @@
-/*globals Lang*/
+/* globals Lang*/
 'use strict'
 
 Lang.addPack({

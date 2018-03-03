@@ -1,4 +1,4 @@
-/*globals Screens, _, measurePasswordStrength, Pash, Storage*/
+/* globals Screens, _, measurePasswordStrength, Pash, Storage*/
 'use strict'
 
 Screens.addController('generate', {
@@ -14,7 +14,7 @@ Screens.addController('generate', {
 	alertInterval: null,
 
 	// Set the selected color as the given element (or null to unset)
-	setColor: function (value) {
+	setColor (value) {
 		this.$('color-options').style.backgroundColor = value ? value.dataset.cssColor : ''
 		if (this.color) {
 			this.color.classList.remove('color-option-selected')
@@ -26,13 +26,13 @@ Screens.addController('generate', {
 	},
 
 	// Show the alert with the given string
-	alert: function (str) {
-		var area = this.$('alert-area'),
+	alert (str) {
+		let area = this.$('alert-area'),
 			that = this
 		area.style.display = ''
 		area.textContent = str
 		clearTimeout(this._alertInterval)
-		this.alertInterval = setTimeout(function () {
+		this.alertInterval = setTimeout(() => {
 			area.style.display = 'none'
 			that.updateHeight()
 		}, 5e3)
@@ -41,8 +41,8 @@ Screens.addController('generate', {
 
 	// Check if all fields are correctly filled
 	// Return true in case of success, false otherwise
-	validate: function () {
-		var userName = this.userName.value,
+	validate () {
+		let userName = this.userName.value,
 			masterKey = this.masterKey.value,
 			serviceName = this.serviceName.value,
 			guessedColor
@@ -74,12 +74,12 @@ Screens.addController('generate', {
 	},
 
 	// Try to generate password from the input values
-	generate: function () {
+	generate () {
 		if (!this.validate()) {
 			return
 		}
 
-		var userName = this.userName.value,
+		let userName = this.userName.value,
 			masterKey = this.masterKey.value,
 			serviceName = this.serviceName.value,
 			cssColor = this.color.dataset.cssColor,
@@ -87,32 +87,32 @@ Screens.addController('generate', {
 			pash = new Pash(masterKey, userName, serviceName, color)
 
 		// Generate pash black key that will be used to check if the masterKey was typed right
-		pash.generatePashKey(Pash.COLOR.BLACK, function (key) {
+		pash.generatePashKey(Pash.COLOR.BLACK, key => {
 			key = key.substr(0, 7)
-			var service = Storage.useService(userName, key, serviceName, color)
+			let service = Storage.useService(userName, key, serviceName, color)
 			if (service) {
 				// All good, go to result screen to generate the password
 				Screens.show('result', {
-					pash: pash,
-					userName: userName,
-					service: service,
-					cssColor: cssColor
+					pash,
+					userName,
+					service,
+					cssColor
 				})
 			} else {
 				// The master key was different from last time, let the user choose what to do
 				Screens.show('change-master-key', {
-					pash: pash,
-					userName: userName,
-					serviceName: serviceName,
-					color: color,
-					cssColor: cssColor,
-					key: key
+					pash,
+					userName,
+					serviceName,
+					color,
+					cssColor,
+					key
 				})
 			}
 		})
 	},
-	updateHistoryList: function () {
-		var data = Storage.getUserData(this.userName.value),
+	updateHistoryList () {
+		let data = Storage.getUserData(this.userName.value),
 			acc = 0,
 			most = [],
 			least = [],
@@ -128,12 +128,8 @@ Screens.addController('generate', {
 			}
 
 			// Separate in two groups (most used, least used)
-			data.services.sort(function (a, b) {
-				return b.hitCount - a.hitCount
-			})
-			total = data.services.reduce(function (sum, service) {
-				return sum + service.hitCount
-			}, 0)
+			data.services.sort((a, b) => b.hitCount - a.hitCount)
+			total = data.services.reduce((sum, service) => sum + service.hitCount, 0)
 			for (i = 0; i < data.services.length; i++) {
 				if (acc < total * 0.7) {
 					most.push(data.services[i])
@@ -142,12 +138,8 @@ Screens.addController('generate', {
 				}
 				acc += data.services[i].hitCount
 			}
-			most.sort(function (a, b) {
-				return a.name > b.name ? 1 : -1
-			})
-			least.sort(function (a, b) {
-				return a.name > b.name ? 1 : -1
-			})
+			most.sort((a, b) => a.name > b.name ? 1 : -1)
+			least.sort((a, b) => a.name > b.name ? 1 : -1)
 
 			// Create the elements
 			if (least.length) {
@@ -157,8 +149,8 @@ Screens.addController('generate', {
 			} else {
 				group = this.selectServices
 			}
-			most.forEach(function (service) {
-				var option = document.createElement('option')
+			most.forEach(service => {
+				let option = document.createElement('option')
 				option.textContent = service.name + ' - ' + _('generate.color.' + service.color)
 				option.dataset.name = service.name
 				option.dataset.color = service.color
@@ -168,8 +160,8 @@ Screens.addController('generate', {
 				group = document.createElement('optgroup')
 				group.label = _('generate.leastUsed')
 				this.selectServices.appendChild(group)
-				least.forEach(function (service) {
-					var option = document.createElement('option')
+				least.forEach(service => {
+					let option = document.createElement('option')
 					option.textContent = service.name + ' - ' + _('generate.color.' + service.color)
 					option.dataset.name = service.name
 					option.dataset.color = service.color
@@ -179,15 +171,15 @@ Screens.addController('generate', {
 			this.selectServices.selectedIndex = 0
 		}
 	},
-	oninit: function () {
-		var that = this
+	oninit () {
+		let that = this
 
 		this.userName = this.$('userName')
 		this.masterKey = this.$('masterKey')
 		this.serviceName = this.$('serviceName')
 		this.selectServices = this.$('selectServices')
 		this.selectServices.onchange = function () {
-			var selected = this.options[this.selectedIndex]
+			let selected = this.options[this.selectedIndex]
 			that.serviceName.value = selected.dataset.name
 			that.setColor(that.$(selected.dataset.color))
 			this.selectedIndex = 0
@@ -216,7 +208,7 @@ Screens.addController('generate', {
 
 		// Give feedback about password strength
 		this.masterKey.onchange = function () {
-			var pass = this.value,
+			let pass = this.value,
 				score
 			if (pass.length < 4) {
 				this.className = ''
@@ -237,14 +229,14 @@ Screens.addController('generate', {
 		}
 
 		// Color buttons
-		this.$$('.color-option').forEach(function (el) {
+		this.$$('.color-option').forEach(el => {
 			el.onclick = function (event) {
 				that.setColor(event.currentTarget)
 			}
 		})
 	},
 	// options is an optional object with keys: color, serviceName
-	onbeforeshow: function (options) {
+	onbeforeshow (options) {
 		options = options || {}
 
 		// Reset fields
@@ -253,7 +245,7 @@ Screens.addController('generate', {
 		this.setColor(options.color ? this.$(options.color) : null)
 		this.serviceName.value = options.serviceName || ''
 	},
-	onaftershow: function () {
+	onaftershow () {
 		// Focus the best field
 		if (this.userName.value) {
 			this.masterKey.focus()
@@ -261,7 +253,7 @@ Screens.addController('generate', {
 			this.userName.focus()
 		}
 	},
-	onafterhide: function () {
+	onafterhide () {
 		this.masterKey.value = ''
 		this.masterKey.className = ''
 		this.serviceName.value = ''

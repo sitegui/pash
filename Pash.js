@@ -1,3 +1,4 @@
+/* globals Pash*/
 'use strict'
 
 /*
@@ -90,7 +91,7 @@ If not, it must generate the second block and wait again.
  * @param {string} serviceName case insensitive
  * @param {string} color one of Pash.COLOR.* constants. This lets the user get more than one key for one service
  */
-function Pash(masterPassword, userName, serviceName, color) {
+window.Pash = function Pash(masterPassword, userName, serviceName, color) {
 	this._masterPassword = masterPassword
 	this._userName = Pash.normalize(userName)
 	this._serviceName = Pash.normalize(serviceName)
@@ -117,7 +118,7 @@ Pash.normalize = function (str) {
  * @param {function(string)} callback execute with the result password
  */
 Pash.prototype.generatePassword = function (format, length, callback) {
-	var tag = String(Math.random())
+	let tag = String(Math.random())
 
 	Pash._worker.postMessage({
 		action: 'password',
@@ -125,9 +126,9 @@ Pash.prototype.generatePassword = function (format, length, callback) {
 		userName: this._userName,
 		serviceName: this._serviceName,
 		color: this._color,
-		format: format,
-		length: length,
-		tag: tag
+		format,
+		length,
+		tag
 	})
 
 	Pash._callbacks[tag] = callback
@@ -142,7 +143,7 @@ Pash.prototype.generatePassword = function (format, length, callback) {
  * @param {function(string)} callback
  */
 Pash.prototype.generatePashKey = function (color, callback) {
-	var pash = new Pash(this._masterPassword, this._userName, 'pash', color)
+	let pash = new Pash(this._masterPassword, this._userName, 'pash', color)
 	pash.generatePassword(Pash.FORMAT.RAW, null, callback)
 }
 
@@ -153,14 +154,14 @@ Pash.prototype.generatePashKey = function (color, callback) {
  * @param {function(string)} callback
  */
 Pash.prototype.encrypt = function (plaintext, callback) {
-	var tag = String(Math.random())
+	let tag = String(Math.random())
 
 	Pash._worker.postMessage({
 		action: 'encrypt',
 		masterPassword: this._masterPassword,
 		userName: this._userName,
-		plaintext: plaintext,
-		tag: tag
+		plaintext,
+		tag
 	})
 
 	Pash._callbacks[tag] = callback
@@ -173,14 +174,14 @@ Pash.prototype.encrypt = function (plaintext, callback) {
  * @param {function(?string)} callback
  */
 Pash.prototype.decrypt = function (ciphertext, callback) {
-	var tag = String(Math.random())
+	let tag = String(Math.random())
 
 	Pash._worker.postMessage({
 		action: 'decrypt',
 		masterPassword: this._masterPassword,
 		userName: this._userName,
-		ciphertext: ciphertext,
-		tag: tag
+		ciphertext,
+		tag
 	})
 
 	Pash._callbacks[tag] = callback
@@ -236,7 +237,7 @@ Pash._callbacks = Object.create(null)
  * @private
  */
 Pash._worker.onmessage = function (event) {
-	var tag = event.data.tag,
+	let tag = event.data.tag,
 		result = event.data.result,
 		callback = Pash._callbacks[tag]
 

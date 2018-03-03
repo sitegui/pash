@@ -1,8 +1,8 @@
-/*globals Screens*/
+/* globals Screens*/
 'use strict'
 
 Screens.addController('credits', {
-	oninit: function () {
+	oninit () {
 		this.$('home').onclick = function () {
 			Screens.show('generate', null, true)
 		}

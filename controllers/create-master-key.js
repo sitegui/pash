@@ -1,9 +1,9 @@
-/*globals Screens, _, measurePasswordStrength, Storage*/
+/* globals Screens, _, measurePasswordStrength, Storage*/
 'use strict'
 
 Screens.addController('create-master-key', {
-	processPassword: function () {
-		var hintsSpan = this.$('hints'),
+	processPassword () {
+		let hintsSpan = this.$('hints'),
 			scoreSpan = this.$('score'),
 			resultSpan = this.$('result'),
 			resultArea = this.$('result-area'),
@@ -55,8 +55,8 @@ Screens.addController('create-master-key', {
 		}
 		this.updateHeight()
 	},
-	oninit: function () {
-		var that = this,
+	oninit () {
+		let that = this,
 			interval = null
 
 		this.$('pash').onclick = function () {
@@ -71,7 +71,7 @@ Screens.addController('create-master-key', {
 		}
 		this.$('password').onkeyup = function () {
 			clearTimeout(interval)
-			interval = setTimeout(function () {
+			interval = setTimeout(() => {
 				that.processPassword()
 			}, 500)
 		}
@@ -81,7 +81,7 @@ Screens.addController('create-master-key', {
 		this.$('result-area').style.transition = 'background-color .5s ease'
 	},
 	// wantHelp is a boolean. If true, start with the form input opened
-	onbeforeshow: function (wantHelp) {
+	onbeforeshow (wantHelp) {
 		this.$('show-password').checked = false
 		this.$('password').type = 'password'
 		this.$('show-helper').style.display = wantHelp ? 'none' : ''
@@ -89,12 +89,12 @@ Screens.addController('create-master-key', {
 		this.$('password').value = ''
 		this.processPassword()
 	},
-	onaftershow: function (wantHelp) {
+	onaftershow (wantHelp) {
 		if (wantHelp) {
 			this.$('password').focus()
 		}
 	},
-	onafterhide: function () {
+	onafterhide () {
 		this.$('password').value = ''
 	}
 })

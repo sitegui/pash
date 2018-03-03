@@ -1,12 +1,12 @@
-/*globals Screens, Storage*/
+/* globals Screens, Storage*/
 'use strict'
 
 Screens.addController('change-master-key', {
 	// Store received data
 	data: null,
 
-	oninit: function () {
-		var that = this
+	oninit () {
+		let that = this
 		this.$('try-again').onclick = function () {
 			Screens.show('generate', {
 				serviceName: that.data.serviceName,
@@ -14,12 +14,12 @@ Screens.addController('change-master-key', {
 			}, true)
 		}
 		this.$('its-ok').onclick = function () {
-			var data = that.data,
+			let data = that.data,
 				service = Storage.useService(data.userName, data.key, data.serviceName, data.color, true)
 			Screens.show('result', {
 				pash: data.pash,
 				userName: data.userName,
-				service: service,
+				service,
 				cssColor: data.cssColor
 			})
 		}
@@ -30,14 +30,14 @@ Screens.addController('change-master-key', {
 		}
 	},
 	// data is an object: {pash: Pash, userName: string, serviceName: string, color: string, cssColor: string, key: string}
-	onbeforeshow: function (data) {
+	onbeforeshow (data) {
 		this.data = data
 		this.$('info').style.display = 'none'
 		this.$('info-button').style.display = ''
 		this.$('current').textContent = Storage.getUserData(data.userName).key
 		this.$('new').textContent = data.key
 	},
-	onafterhide: function () {
+	onafterhide () {
 		this.data = null
 		this.$('current').textContent = ''
 		this.$('new').textContent = ''

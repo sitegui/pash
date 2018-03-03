@@ -1,4 +1,4 @@
-/*globals Screens, Pash, Storage*/
+/* globals Screens, Pash, Storage*/
 'use strict'
 
 Screens.addController('result', {
@@ -13,7 +13,7 @@ Screens.addController('result', {
 	length: null,
 
 	// Set the selected format as the given element
-	setFormat: function (value) {
+	setFormat (value) {
 		if (this.format) {
 			this.format.classList.remove('option-selected')
 		}
@@ -22,7 +22,7 @@ Screens.addController('result', {
 	},
 
 	// Set the selected length as the given element
-	setLength: function (value) {
+	setLength (value) {
 		if (this.length) {
 			this.length.classList.remove('option-selected')
 		}
@@ -30,17 +30,17 @@ Screens.addController('result', {
 		this.length.classList.add('option-selected')
 	},
 
-	updateResult: function () {
-		var format = Number(this.format.dataset.id),
+	updateResult () {
+		let format = Number(this.format.dataset.id),
 			length = Number(this.length.dataset.id),
 			that = this
-		this.data.pash.generatePassword(format, length, function (pass) {
+		this.data.pash.generatePassword(format, length, pass => {
 			that.$('result').textContent = pass
 		})
 	},
 
-	oninit: function () {
-		var that = this
+	oninit () {
+		let that = this
 
 		this.$('back').onclick = function () {
 			Screens.show('generate', null, true)
@@ -51,7 +51,7 @@ Screens.addController('result', {
 			that.updateHeight()
 		}
 		this.$('result').onclick = function () {
-			var range = document.createRange()
+			let range = document.createRange()
 			range.selectNode(this)
 			window.getSelection().removeAllRanges()
 			window.getSelection().addRange(range)
@@ -75,7 +75,7 @@ Screens.addController('result', {
 		}
 	},
 	// data is an object: {pash: Pash, userName: string, service: service, cssColor: string}
-	onbeforeshow: function (data) {
+	onbeforeshow (data) {
 		this.data = data
 
 		if (data.service.format === Pash.FORMAT.NUMERIC) {
@@ -103,14 +103,14 @@ Screens.addController('result', {
 		this.updateResult()
 
 		// Display timeout (for security reasons)
-		this.timeout = setTimeout(function () {
+		this.timeout = setTimeout(() => {
 			Screens.show('generate', null, true)
 		}, 60e3)
 	},
-	onbeforehide: function () {
+	onbeforehide () {
 		clearTimeout(this.interval)
 	},
-	onafterhide: function () {
+	onafterhide () {
 		this.data = null
 		this.$('result').textContent = ''
 	}

@@ -1,4 +1,4 @@
-/*globals Module, importScripts, self, Util, Cipher*/
+/* globals Pash, Module, importScripts, self, Util, Cipher*/
 'use strict'
 
 // Import and bind pbkdf
@@ -13,12 +13,12 @@ importScripts('pbkdf_min.js', 'Util.js', 'Cipher.js')
  * @param {number} rounds
  * @returns {string} 64-char hex-encoded string
  */
-var pbkdf = Module.cwrap('pbkdf_simple', 'string', ['string', 'string', 'number', 'number'])
+let pbkdf = Module.cwrap('pbkdf_simple', 'string', ['string', 'string', 'number', 'number'])
 
 /**
  * Alphabet type constants
  */
-var alphabets = {
+let alphabets = {
 	a: 'abcdefghijklmnopqrstuvwxyz',
 	A: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 	'0': '0123456789',
@@ -30,7 +30,7 @@ var alphabets = {
  * @param {Event} event
  */
 self.onmessage = function (event) {
-	var data = event.data,
+	let data = event.data,
 		result = '',
 		pash, key
 
@@ -54,7 +54,7 @@ self.onmessage = function (event) {
 	}
 
 	self.postMessage({
-		result: result,
+		result,
 		tag: data.tag
 	})
 }
@@ -67,7 +67,7 @@ self.onmessage = function (event) {
  * @param {string} serviceName
  * @param {string} color
  */
-function Pash(masterPassword, userName, serviceName, color) {
+self.Pash = function Pash(masterPassword, userName, serviceName, color) {
 	/** @member {string} */
 	this.masterPassword = masterPassword
 
@@ -101,7 +101,7 @@ Pash.FORMAT = {
  * @returns {string}
  */
 Pash.prototype.getStandardPassword = function (length) {
-	var alphabet, str, i, hasa, has0, c
+	let alphabet, str, i, hasa, has0, c
 
 	alphabet = alphabets.a + alphabets['0']
 	length *= 5
@@ -128,7 +128,7 @@ Pash.prototype.getStandardPassword = function (length) {
  * @returns {string}
  */
 Pash.prototype.getNumericPassword = function (length) {
-	var i, str = ''
+	let i, str = ''
 
 	// Pick random digits
 	length *= 4
@@ -145,7 +145,7 @@ Pash.prototype.getNumericPassword = function (length) {
  * @returns {string}
  */
 Pash.prototype.getStrongPassword = function (length) {
-	var alphabet, str, i, hasA, hasa, has0, has$, c
+	let alphabet, str, i, hasA, hasa, has0, has$, c
 
 	alphabet = alphabets.A + alphabets.a + alphabets['0'] + alphabets.$
 	length *= 7
@@ -182,7 +182,7 @@ Pash.prototype.getRawPassword = function () {
  * @returns {number} the first bit is the most significant
  */
 Pash.prototype.getNextBits = function (n) {
-	var result = 0,
+	let result = 0,
 		bitPosInBlock, i, bytePosInBlock, bitPosInByte, byte, bit
 
 	// Extract each bit
@@ -218,7 +218,7 @@ Pash.prototype.getNextBits = function (n) {
  */
 Pash.prototype.getNextRandom = function (max) {
 	// Take ceil(log2(max))
-	var nBits = 0,
+	let nBits = 0,
 		temp = max - 1
 	while (temp) {
 		temp >>>= 1
@@ -226,7 +226,7 @@ Pash.prototype.getNextRandom = function (max) {
 	}
 
 	// Find the next valid value
-	var r
+	let r
 	do {
 		r = this.getNextBits(nBits)
 	} while (r >= max)
@@ -250,7 +250,7 @@ Pash.prototype.chooseRandom = function (array) {
  * @returns {Uint8Array|string} with 256 bits (32 bytes)
  */
 Pash.prototype.getKeyBlock = function (index, returnAsString) {
-	var hexStr = pbkdf(this.masterPassword, this.salt, index, 1e4)
+	let hexStr = pbkdf(this.masterPassword, this.salt, index, 1e4)
 	if (returnAsString) {
 		return hexStr
 	}

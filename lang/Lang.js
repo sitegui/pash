@@ -1,7 +1,7 @@
 'use strict'
 
 // Module to detect locale and provide translated strings
-var Lang = {}
+let Lang = {}
 
 // Key used to save user preference in the browser
 Lang.localStorageKey = 'pash-lang'
@@ -22,7 +22,7 @@ Lang.addPack = function (pack) {
 // It's a commom practive to create an alias for this function with
 // var _ = Lang.getString
 Lang.getString = function (key) {
-	var parts = key.split('.'),
+	let parts = key.split('.'),
 		i, context
 	context = Lang._pack.strings
 	for (i = 0; i < parts.length; i++) {
@@ -44,7 +44,7 @@ Lang.getString = function (key) {
 // Return an array with the names of all registered language packs
 // Every element is an object with the keys 'name' and 'tag'
 Lang.getPackNames = function () {
-	var i, r = []
+	let i, r = []
 	for (i in Lang._packs) {
 		r.push({
 			name: Lang._packs[i].name,
@@ -74,7 +74,7 @@ Lang.getCurrentTag = function () {
 // Start the lang module, must be called on window load event
 // Call it before changing the initial DOM
 Lang.init = function () {
-	var langTag, packName, saved, replaceStrings
+	let langTag, packName, saved, replaceStrings
 	langTag = (navigator.language || navigator.userLanguage).toLowerCase()
 
 	// Try to get from a saved preference
@@ -106,7 +106,7 @@ Lang.init = function () {
 
 	// Run the DOM, replacing strings
 	replaceStrings = function (el) {
-		var els, i, str
+		let els, i, str
 		els = el.children
 		if (els.length) {
 			for (i = 0; i < els.length; i++) {
@@ -139,6 +139,6 @@ Lang._defaultPack = null
 // Return the short version of a language tag
 // 'en-us' => 'en'
 Lang._shortTag = function (tag) {
-	var pos = tag.indexOf('-')
+	let pos = tag.indexOf('-')
 	return pos === -1 ? tag : tag.substr(0, pos)
 }

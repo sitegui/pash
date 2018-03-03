@@ -1,10 +1,10 @@
 /**
  * @file Provide utility functions for the worker
  */
-/*globals Module*/
+/* globals Module*/
 'use strict'
 
-var Util = {}
+let Util = {}
 
 /**
  * Convert a hex-encoded string to a Uint8Array
@@ -15,7 +15,7 @@ Util.i8ArrFromHex = function (str) {
 	if (!/^([0-9a-f]{2})*$/i.test(str)) {
 		throw new Error('Invalid string to decode: ' + str)
 	}
-	var len = str.length,
+	let len = str.length,
 		arr = new Uint8Array(len / 2),
 		i
 	for (i = 0; i < len; i += 2) {
@@ -39,7 +39,7 @@ Util.hexEncodeStr = function (str) {
  * @returns {string}
  */
 Util.hexDecodeStr = function (str) {
-	var utf8 = new Module.Runtime.UTF8Processor(),
+	let utf8 = new Module.Runtime.UTF8Processor(),
 		ret = '',
 		i
 	for (i = 0; i < str.length; i += 2) {
@@ -54,7 +54,7 @@ Util.hexDecodeStr = function (str) {
  * @returns {string}
  */
 Util.hexEncodeArray = function (bytes) {
-	var ret = '',
+	let ret = '',
 		byte, i
 	for (i = 0; i < bytes.length; i++) {
 		byte = bytes[i].toString(16)
@@ -69,7 +69,7 @@ Util.hexEncodeArray = function (bytes) {
  */
 Util.i32ToHex = function (num) {
 	num |= 0
-	var a = num >>> 24,
+	let a = num >>> 24,
 		b = (num >>> 16) & 0xFF,
 		c = (num >>> 8) & 0xFF,
 		d = num & 0xFF
@@ -85,7 +85,7 @@ Util.i32ToHex = function (num) {
  * @returns {string}
  */
 Util.xor = function (a, b) {
-	var len = Math.min(a.length, b.length),
+	let len = Math.min(a.length, b.length),
 		ret = '',
 		i
 	for (i = 0; i < len; i++) {

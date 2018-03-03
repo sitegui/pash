@@ -1,9 +1,9 @@
-/*globals Screens*/
+/* globals Screens*/
 'use strict'
 
 Screens.addController('how', {
-	oninit: function () {
-		var moreButton, moreInfo, that = this
+	oninit () {
+		let moreButton, moreInfo, that = this
 		moreButton = this.$('more-button')
 		moreInfo = this.$('more-info')
 		moreButton.onclick = function () {
@@ -15,7 +15,7 @@ Screens.addController('how', {
 			Screens.show('create-master-key')
 		}
 	},
-	onbeforeshow: function () {
+	onbeforeshow () {
 		this.$('more-button').style.display = ''
 		this.$('more-info').style.display = 'none'
 	}

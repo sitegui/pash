@@ -9,8 +9,8 @@
 // 96 < score <= 128: awesome
 // info (optional) is an object that will be populated with aditional feedback
 // info will have these keys: hasDigits, hasLetters, hasCases, hasSymbols
-function measurePasswordStrength(str, info) {
-	var i, c,
+window.measurePasswordStrength = function measurePasswordStrength(str, info) {
+	let i, c,
 		LCs = 'abcdefghijklmnopqrstuvwxyz',
 		UCs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
 		Ds = '0123456789',

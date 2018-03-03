@@ -1,8 +1,8 @@
-/*globals Pash*/
+/* globals Pash*/
 'use strict'
 
-function test() {
-	var pf = Pash.FORMAT,
+window.test = function test() {
+	let pf = Pash.FORMAT,
 		pl = Pash.LENGTH,
 		pc = Pash.COLOR,
 		total = 0,
@@ -17,7 +17,7 @@ function test() {
 	 */
 	function testCase(name, fn) {
 		total++
-		fn(function (err) {
+		fn(err => {
 			done++
 			if (err) {
 				console.error(name, err)
@@ -41,7 +41,7 @@ function test() {
 	 */
 	function check(pash, format, length, goal) {
 		return function (done) {
-			pash.generatePassword(format, length, function (result) {
+			pash.generatePassword(format, length, result => {
 				done(result === goal ? null : 'expecting ' + goal + ' got ' + result)
 			})
 		}
@@ -59,35 +59,35 @@ function test() {
 	testCase('Strong/Long', check(pash, pf.STRONG, pl.LONG, '>JT;||4hx3)OM2)KLZDqv'))
 
 	// Pash key
-	testCase('Pash key', function (done) {
-		pash.generatePashKey(pc.RED, function (key) {
-			var pash2 = new Pash('Eu gosto de maçãs!', 'bitu', 'Pash', pc.RED)
+	testCase('Pash key', done => {
+		pash.generatePashKey(pc.RED, key => {
+			let pash2 = new Pash('Eu gosto de maçãs!', 'bitu', 'Pash', pc.RED)
 			check(pash2, pf.RAW, null, key)(done)
 		})
 	})
 
 	// Encryption
-	testCase('Consistent encryption', function (done) {
-		var str = 'Hello World! Non-ASCII: áçêñtòs ☃'
-		pash.encrypt(str, function (ciphertext) {
-			pash.decrypt(ciphertext, function (str2) {
+	testCase('Consistent encryption', done => {
+		let str = 'Hello World! Non-ASCII: áçêñtòs ☃'
+		pash.encrypt(str, ciphertext => {
+			pash.decrypt(ciphertext, str2 => {
 				done(str === str2 ? null : 'Not equal:\n' + str + '\n' + str2)
 			})
 		})
 	})
-	testCase('Non-deterministic encryption', function (done) {
-		pash.encrypt('hi', function (a) {
-			pash.encrypt('hi', function (b) {
+	testCase('Non-deterministic encryption', done => {
+		pash.encrypt('hi', a => {
+			pash.encrypt('hi', b => {
 				done(a !== b ? null : 'Failed')
 			})
 		})
 	})
-	testCase('Integrity check', function (done) {
-		pash.encrypt('hi', function (ciphertext) {
-			var c = ciphertext[0]
+	testCase('Integrity check', done => {
+		pash.encrypt('hi', ciphertext => {
+			let c = ciphertext[0]
 			c = ((parseInt(c, 16) + 1) % 16).toString(16)
 			ciphertext = c + ciphertext.substr(1)
-			pash.decrypt(ciphertext, function (result) {
+			pash.decrypt(ciphertext, result => {
 				done(result === null ? null : 'Failed')
 			})
 		})

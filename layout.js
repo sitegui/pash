@@ -1,10 +1,10 @@
-/*globals Lang, Screens, Storage*/
+/* globals _, Lang, Screens, Storage*/
 'use strict'
 
 // Show there is a new available version
-var updateAvailable = false
+let updateAvailable = false
 applicationCache.onupdateready = function () {
-	var el = document.getElementById('update-alert')
+	let el = document.getElementById('update-alert')
 	updateAvailable = true
 	if (el) {
 		el.style.display = 'block'
@@ -12,10 +12,11 @@ applicationCache.onupdateready = function () {
 }
 
 // Useful alias
-var _ = Lang.getString
+// eslint-disable-next-line no-unused-vars
+let _ = Lang.getString
 
 // Load saved data and start the application
-addEventListener('load', function () {
+addEventListener('load', () => {
 	Lang.init()
 
 	// Update button

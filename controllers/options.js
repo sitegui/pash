@@ -1,8 +1,8 @@
-/*globals Screens, _, Storage, Lang*/
+/* globals Screens, _, Storage, Lang*/
 'use strict'
 
 Screens.addController('options', {
-	oninit: function () {
+	oninit () {
 		this.$('home').onclick = function () {
 			Screens.show('generate', null, true)
 		}
@@ -16,7 +16,7 @@ Screens.addController('options', {
 		}
 
 		// Populate language options
-		var element, langs, i, option, current
+		let element, langs, i, option, current
 		langs = Lang.getPackNames()
 		element = this.$('language')
 		current = Lang.getCurrentTag()

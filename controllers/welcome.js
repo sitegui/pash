@@ -1,14 +1,14 @@
-/*globals Screens*/
+/* globals Screens*/
 'use strict'
 
 Screens.addController('welcome', {
-	enterListener: function (event) {
+	enterListener (event) {
 		if (event.keyCode === 13) {
 			event.preventDefault()
 			Screens.show('generate')
 		}
 	},
-	oninit: function () {
+	oninit () {
 		this.$('know-more-button').onclick = function () {
 			Screens.show('how')
 		}
@@ -16,10 +16,10 @@ Screens.addController('welcome', {
 			Screens.show('generate')
 		}
 	},
-	onaftershow: function () {
+	onaftershow () {
 		document.body.addEventListener('keyup', this.enterListener)
 	},
-	onbeforehide: function () {
+	onbeforehide () {
 		document.body.removeEventListener('keyup', this.enterListener)
 	}
 })

@@ -2,7 +2,7 @@
  * @file Provide functions to encrypt/decrypt
  * This file depends on pbkdf_min.js
  */
-/*globals Module, Util*/
+/* globals Module, Util*/
 'use strict'
 
 /*
@@ -60,7 +60,7 @@ The decryption is very similar to the encryption, except:
 
 */
 
-var Cipher = {}
+let Cipher = {}
 
 /**
  * @param {string} key hex-encoded
@@ -68,7 +68,7 @@ var Cipher = {}
  * @returns {string} hex-encoded
  */
 Cipher.encrypt = function (key, plaintext) {
-	var nonce = new Date().toISOString(),
+	let nonce = new Date().toISOString(),
 		keys = Cipher._deriveKeys(key),
 		iv = Cipher._hmac(keys.iv, Util.hexEncodeStr(nonce)),
 		body, tag
@@ -85,7 +85,7 @@ Cipher.encrypt = function (key, plaintext) {
  * @returns {?string} null in case of error
  */
 Cipher.decrypt = function (key, ciphertext) {
-	var keys, iv, tag, body
+	let keys, iv, tag, body
 
 	if (!/^([0-9a-f]{2}){64,}$/i.test(ciphertext)) {
 		// Should be hex-encoded and have at least iv+tag (32 bytes each)
@@ -139,7 +139,7 @@ Cipher._hmac = Module.cwrap('hmac_simple_hex', 'string', ['string', 'string'])
  * @returns {string} hex-encoded
  */
 Cipher._core = function (key, iv, text) {
-	var counter = 0,
+	let counter = 0,
 		ret = '',
 		i, pad
 

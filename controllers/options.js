@@ -1,4 +1,4 @@
-/* globals Screens, _, Storage, Lang*/
+/* globals Screens, _, Storage, Lang */
 'use strict'
 
 Screens.addController('options', {
@@ -40,5 +40,13 @@ Screens.addController('options', {
 			Lang.setLanguage(this.value)
 			location.reload(false)
 		}
+
+		// Save breadcrumbs configuration
+		this.$('show-breadcrumbs').onchange = function () {
+			Storage.data.breadcrumbs = this.checked
+		}
+	},
+	onbeforeshow() {
+		this.$('show-breadcrumbs').checked = Storage.data.breadcrumbs
 	}
 })

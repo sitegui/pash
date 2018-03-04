@@ -172,6 +172,10 @@ Screens.addController('generate', {
 		}
 	},
 	updateBreadcrumbs() {
+		if (!Storage.data.breadcrumbs) {
+			return
+		}
+
 		Pash.breadcrumbs(this.masterKey.value, crumbs => {
 			let w = this.breadcrumbs.width,
 				h = this.breadcrumbs.height,
@@ -273,6 +277,7 @@ Screens.addController('generate', {
 		this.updateHistoryList()
 		this.setColor(options.color ? this.$(options.color) : null)
 		this.serviceName.value = options.serviceName || ''
+		this.breadcrumbs.style.display = Storage.data.breadcrumbs ? '' : 'none'
 	},
 	onaftershow() {
 		// Focus the best field

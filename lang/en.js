@@ -141,7 +141,8 @@ Lang.addPack({
 			confirmClear: 'This will clear all you saved data (your name and your services).\nAre you sure?',
 			language: 'Language: ',
 			backup: 'Backup my data',
-			restore: 'Restore from a backup'
+			restore: 'Restore from a backup',
+			breadcrumbs: 'Show a black-white strip as I type my master key to help me detect typos'
 		},
 		backup: {
 			title: 'Backup data',

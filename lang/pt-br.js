@@ -140,7 +140,8 @@ Lang.addPack({
 			confirmClear: 'Isso irá excluir todos seus dados salvos (seu nome e os serviços usados).\nTem certeza?',
 			language: 'Língua: ',
 			backup: 'Guardar cópia dos dados',
-			restore: 'Restaurar de uma cópia'
+			restore: 'Restaurar de uma cópia',
+			breadcrumbs: 'Mostrar uma faixa brancha e preta quando eu digito minha senha mestra para me ajudar a ver que digitei algo errado'
 		},
 		backup: {
 			title: 'Salvar dados',

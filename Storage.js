@@ -45,14 +45,17 @@ Storage.reset = function () {
 					length: 'int'
 				}]
 			}
-		}
+		},
+		// whether breadcrumbs are active
+		'breadcrumbs=false': Boolean
 	}
 	*/
 	Storage.data = {
 		version: 2,
 		users: {},
 		welcomed: false,
-		lastUser: ''
+		lastUser: '',
+		breadcrumbs: false
 	}
 }
 
@@ -208,5 +211,11 @@ Storage.restore = function (data) {
 	if (parsed.version !== 2) {
 		throw new Error('Incompatible')
 	}
+
+	// Set default values
+	if (parsed.breadcrumbs === undefined) {
+		parsed.breadcrumbs = false
+	}
+
 	Storage.data = parsed
 }

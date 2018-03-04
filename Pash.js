@@ -34,11 +34,14 @@ keyBlock[i] = PBKDF(masterPassword, f(userName, serviceName, color), i)
 
 There are 3 output formats:
 * Standard: one upper-case letter followed by lower-case letters and digit
-`    Must have at least one lower-case letter and one digit
+	Must have at least one lower-case letter and one digit
+	Universe = 26 * (36^(n-1) - 26^(n-1) - 10^(n-1))
 * Numeric: digits
+	Universe = 10^n
 * Strong: letters (both case), digits and symbols
-`    Must have at least one of each class: lower-case, upper-case, digit, symbol
-`    The selected symbols are (26 elements): !#$%&()*+,-./:;<=>?@[]_{|}
+	Must have at least one of each class: lower-case, upper-case, digit, symbol
+	The selected symbols are (26 elements): !#$%&()*+,-./:;<=>?@[]_{|}
+	Universe = 88^n - 78^n - 3*62^n + 3*52^n + 3*36^n -3*26^n - 10^n
 
 Output length and entropy:
 +---------+----------------------------+
@@ -47,13 +50,13 @@ Output length and entropy:
 |(Rule)   |Short   |Medium   |Long     |
 +---------+--------+---------+---------+
 |Standard |5 chars |10 chars |15 chars |
-|(A | a0) |24 bits |51 bits  |77 bits  |
+|(A | a0) |25 bits |51 bits  |77 bits  |
 +---------+--------+---------+---------+
 |Numeric  |4 chars |8 chars  |12 chars |
-|(0)      |13 bits |26 bits  |39 bits  |
+|(0)      |13 bits |27 bits  |40 bits  |
 +---------+--------+---------+---------+
 |Strong   |7 chars |14 chars |21 chars |
-|(Aa0$)   |35 bits |71 bits  |105 bits |
+|(Aa0$)   |44 bits |90 bits  |136 bits |
 +---------+--------+---------+---------+
 |Raw      |64 chars                    |
 |(hex)    |256 bits                    |
@@ -64,16 +67,16 @@ The formatting algorithm is defined as follows:
 2. pick one char from the alphabet (depending on the target format)
 3. repeat 2. until the goal length
 4. check if the constrains hold (eg, at least one digit and one lower-case letter)
-`  If it holds, them done
-`  Otherwise repeat from 1.
+	If it holds, them done
+	Otherwise repeat from 1.
 These steps guarantee the uniform distribution of the password, given that the step 2 is uniform over the alphabet
 
 To pick a char from an alphabet with N elements (eg, 10 digits):
 1. Pick ceil(log2(N)) bits from the key stream (eg, 4 bits for the 10 digits alphabet)
 2. Read those bits as a integer I (the first bit is the most significant)
 3. check if I<N
-`  If it holds, them return the I-th element from the alphabet
-`  Otherwise repeat from 1.
+	If it holds, them return the I-th element from the alphabet
+	Otherwise repeat from 2.
 These steps guarantee the uniform distribution of the chosen chars
 (given that the input bit stream is indistinguishable from random noise)
 

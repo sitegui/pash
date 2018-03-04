@@ -21,19 +21,19 @@ Lang.addPack({
 			hashing: {
 				title: 'Hashing',
 				line1: 'PASH uses 4 inputs to generate each password:',
-				item1: 'The user name (upper cased), to give more entropy for the master key',
+				item1: 'The user name, without spaces and in lower case',
 				item2: 'The user master key, expected to be a strong password by itself',
-				item3: 'The service name (upper cased), as spelled by the user',
-				item4: 'A color (among 9 options), to let the user change his password within the same service',
-				line2: 'The first step is to hash all the inputs using SHA-256:',
-				code: 'SHA256(<br>&#9;SHA256(userName+\'-\'+userMasterKey) +<br>&#9;SHA256(serviceName+\'-\'+colorId)<br>)'
+				item3: 'The service name, without spaces and in lower case',
+				item4: 'A color (red, green, blue or black), to let the user change his password within the same service',
+				line2: 'The first step is to derive a pseudo-random value with a password-based key-derivation function:',
+				code: 'PBKDFv2-SHA-256(\n\tuserMasterKey,\n\tuserName + "\\n" + serviceName + "\\n" + color,\n\t10000\n)'
 			},
 			translating: {
 				title: 'Translating into a password',
-				line1: 'The second step is to translate the 32-byte hash output into the final password. There are 3 different options for this process:',
-				item1: 'Standard: creates a simple password, with letters and numbers, like <code>Trgpx622q7</code>',
-				item2: 'Numeric: for credit cards, like <code>56778691</code>',
-				item3: 'Strong: for critical applications, like servers, example: <code>V>SGq&amp;:&amp;3lka&lt;t</code>'
+				line1: 'The second step is to translate the pseudo-random output into the final password. There are 3 different options for this process:',
+				item1: 'Standard: creates a password with letters and numbers, like <code>Trgpx622q7</code>',
+				item2: 'Numeric: composed by digits only, like <code>56778691</code>',
+				item3: 'Strong: for critical applications, example: <code>V>SGq&amp;:&amp;3lka&lt;t</code>'
 			},
 			retrieving: {
 				title: 'Retrieving your keys',

@@ -20,19 +20,19 @@ Lang.addPack({
 			hashing: {
 				title: 'Hashing',
 				line1: 'PASH usa 4 valores para gerar cada senha:',
-				item1: 'O nome do usuário (em letras maiúsculas), para dar maior variabilidade à senha mestre',
+				item1: 'O nome do usuário, sem espaços e em minúsculas',
 				item2: 'A senha mestre, que deve ser uma senha bem forte por si só já',
-				item3: 'O nome do serviço (em letras maiúsculas), como digitado pelo usuário',
-				item4: 'Uma cor (entre 9 opções), permitindo o usuário trocar sua senha dentro do mesmo serviço',
-				line2: 'O primeiro passo é juntar todas as entradas com SHA-256:',
-				code: 'SHA256(<br>&#9;SHA256(userName+\'-\'+userMasterKey) +<br>&#9;SHA256(serviceName+\'-\'+colorId)<br>)'
+				item3: 'O nome do serviço, sem espaços e em minúsculas',
+				item4: 'Uma cor (red, green, blue or black), permitindo o usuário trocar sua senha dentro do mesmo serviço',
+				line2: 'O primeiro passo é gerar um valor pseudo-aleatório com uma função de geração de chave com base em senhas:',
+				code: 'PBKDFv2-SHA-256(\n\tsenhaMestra,\n\tnomeUsuario + "\\n" + nomeServico + "\\n" + cor,\n\t10000\n)'
 			},
 			translating: {
 				title: 'Traduzindo numa senha',
-				line1: 'O segundo passo é traduzir a saída de 32 bytes no passo 1 no senha final. Existem 3 opções diferentes para esse processo:',
-				item1: 'Normal: cria uma senha simples, com letras e números, exemplo <code>Trgpx622q7</code>',
-				item2: 'Numérico: para cartões de crédito, exemplo <code>56778691</code>',
-				item3: 'Forte: para aplicações críticas, como servidores, exemplo: <code>V>SGq&amp;:&amp;3lka&lt;t</code>'
+				line1: 'O segundo passo é traduzir a saída pseudo-aleatória do passo 1 na senha final. Existem 3 opções diferentes para esse processo:',
+				item1: 'Normal: cria uma senha com letras e números, exemplo <code>Trgpx622q7</code>',
+				item2: 'Numérico: usa apenas dígitos, exemplo <code>56778691</code>',
+				item3: 'Forte: para aplicações críticas, exemplo: <code>V>SGq&amp;:&amp;3lka&lt;t</code>'
 			},
 			retrieving: {
 				title: 'Recuperando suas senhas',

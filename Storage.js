@@ -13,68 +13,52 @@ Storage.data = null
 // Empty and reset the data to the initial state
 Storage.reset = function () {
 	/*
-	Change log:
-	
-	[Version 1]
-	  userName: string
-	  services.$.name: string
-	  services.$.color: string
-	  services.$.decoder: int
-	  services.$.hitCount: int
-	  services.$.length: int
-	  welcomed: bool
-	  lastUsedMasterKeyHashed: string
+	Supported versions:
 	
 	[Version 2]
-	  welcomed: bool
-	    true if the user has already completed the tutorial
-	  lastUser: string
-	    the normalized name of the last user name used
-	  users: object
-	    a hash map. Each key is the normalized user name  (lower case, no spaces)
-	  users[user].name: string
-	    the denormalized user name
-	  users[user].normalName: string
-	    the normalized user name
-	  users[user].key: string
-	    a key derived from the user's master password: PASH(name, pass, 'pash', 'black')
-	  users[user].services.$.name: string
-	    the service display name
-	  users[user].services.$.normalName: string
-	    the service normalized name (lower case, no spaces)
-	  users[user].services.$.color: string
-	    the selected color (lower case, ex: 'red')
-	  users[user].services.$.format: int
-	    the selected output decoder (see Pash.FORMAT)
-	  users[user].services.$.hitCount: int
-	    the number of times this service was used
-	  users[user].services.$.length: int
-	    the selected output length (see Pash.LENGTH)
-	
-	[Version 3]
-	  Compatible with version 2, adding these fields:
-	  users[user].sync: boolean
-	    true if the user wants to use the sync feature
-	  users[user].services.$.id: string
-	    unique string, based on service normalized name and color
-		HMAC(PASH(name, pass, 'pash', 'green'), JSON.stringify([normalName, color]))
-		This is only filled when syncing is performed
-	  users[user].services.$.lastUpdate: int
-	    the timestamp this service was last modified
-	  users[user].services.$.lastHitCount: int
-	    the last observed hitCount when syncing with the server
-	  users[user].removedServices.$: string
-	    the id of the removed services
+	{
+		// true if the user has already completed the tutorial
+		welcomed: Boolean,
+		// the normalized name of the last user name used
+		lastUser: String,
+		// a hash map. Each key is the normalized user name  (lower case, no spaces)
+		users: {
+			'*': {
+				// the denormalized user name
+				name: String,
+				// the normalized user name
+				normalName: String,
+				// a key derived from the user's master password: PASH(name, pass, 'pash', 'black')
+				key: String,
+				services: [{
+					// the service display name
+					name: String,
+					// the service normalized name (lower case, no spaces)
+					normalName: String,
+					// the selected color (lower case, ex: 'red')
+					color: String,
+					// the selected output decoder (see Pash.FORMAT)
+					format: 'int',
+					// the number of times this service was used
+					hitCount: 'int',
+					// the selected output length (see Pash.LENGTH)
+					length: 'int'
+				}]
+			}
+		}
+	}
 	*/
 	Storage.data = {
-		version: 3,
+		version: 2,
 		users: {},
 		welcomed: false,
 		lastUser: ''
 	}
 }
 
-// Load previously saved data from localStorage
+/**
+ * Load previously saved data from localStorage
+ */
 Storage.load = function () {
 	let data = localStorage.getItem('pash-data')
 	if (!data) {
@@ -84,13 +68,7 @@ Storage.load = function () {
 	}
 
 	try {
-		Storage.data = JSON.parse(data)
-
-		if (Storage.data.version === 2) {
-			Storage.upgradeFromV2()
-		} else if (Storage.data.version !== 3) {
-			throw new Error('Incompatible')
-		}
+		Storage.restore(data)
 	} catch (e) {
 		// Error (corrupted or incompatible data)
 		alert(_('localStorageError'))
@@ -133,9 +111,7 @@ Storage.getUserData = function (userName, create) {
 			name: userName,
 			normalName,
 			key: '',
-			sync: false,
-			services: [],
-			removedServices: []
+			services: []
 		}
 		Storage.save()
 	}
@@ -161,12 +137,9 @@ Storage.getServiceData = function (userName, serviceName, color) {
 		name: serviceName,
 		normalName: serviceNormalName,
 		color,
-		id: '',
 		format: Pash.FORMAT.STANDARD,
 		hitCount: 0,
-		length: Pash.LENGTH.MEDIUM,
-		lastUpdate: 0,
-		lastHitCount: 0
+		length: Pash.LENGTH.MEDIUM
 	}
 	data.services.push(service)
 	Storage.save()
@@ -219,18 +192,21 @@ Storage.useService = function (userName, key, serviceName, color, force) {
 }
 
 /**
- * Upgrade local data from v2 to v3
+ * @returns {string}
  */
-Storage.upgradeFromV2 = function () {
-	Storage.data.version = 3
-	for (let userName in Storage.data.users) {
-		let user = Storage.data.users[userName]
-		user.sync = false
-		user.removedServices = []
-		user.services.forEach(service => {
-			service.id = ''
-			service.lastUpdate = 0
-			service.lastHitCount = 0
-		})
+Storage.backup = function () {
+	return JSON.stringify(Storage.data)
+}
+
+/**
+ * Import data from a string.
+ * If the operation fails an exception is thrown
+ * @param {string} data
+ */
+Storage.restore = function (data) {
+	let parsed = JSON.parse(data)
+	if (parsed.version !== 2) {
+		throw new Error('Incompatible')
 	}
+	Storage.data = parsed
 }

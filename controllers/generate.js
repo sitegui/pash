@@ -14,7 +14,7 @@ Screens.addController('generate', {
 	alertInterval: null,
 
 	// Set the selected color as the given element (or null to unset)
-	setColor (value) {
+	setColor(value) {
 		this.$('color-options').style.backgroundColor = value ? value.dataset.cssColor : ''
 		if (this.color) {
 			this.color.classList.remove('color-option-selected')
@@ -26,7 +26,7 @@ Screens.addController('generate', {
 	},
 
 	// Show the alert with the given string
-	alert (str) {
+	alert(str) {
 		let area = this.$('alert-area'),
 			that = this
 		area.style.display = ''
@@ -41,7 +41,7 @@ Screens.addController('generate', {
 
 	// Check if all fields are correctly filled
 	// Return true in case of success, false otherwise
-	validate () {
+	validate() {
 		let userName = this.userName.value,
 			masterKey = this.masterKey.value,
 			serviceName = this.serviceName.value,
@@ -74,7 +74,7 @@ Screens.addController('generate', {
 	},
 
 	// Try to generate password from the input values
-	generate () {
+	generate() {
 		if (!this.validate()) {
 			return
 		}
@@ -111,7 +111,7 @@ Screens.addController('generate', {
 			}
 		})
 	},
-	updateHistoryList () {
+	updateHistoryList() {
 		let data = Storage.getUserData(this.userName.value),
 			acc = 0,
 			most = [],
@@ -171,13 +171,31 @@ Screens.addController('generate', {
 			this.selectServices.selectedIndex = 0
 		}
 	},
-	oninit () {
+	updateBreadcrumbs() {
+		Pash.breadcrumbs(this.masterKey.value, crumbs => {
+			let w = this.breadcrumbs.width,
+				h = this.breadcrumbs.height,
+				side = w / crumbs.length
+			this.breadcrumbsCntxt.clearRect(0, 0, w, h)
+			if (crumbs.length < 3) {
+				return
+			}
+			for (let i = 0; i < crumbs.length; i++) {
+				let x = i * side
+				this.breadcrumbsCntxt.fillStyle = crumbs[i] ? '#333' : '#CCC'
+				this.breadcrumbsCntxt.fillRect(x, 0, side + 1, h)
+			}
+		})
+	},
+	oninit() {
 		let that = this
 
 		this.userName = this.$('userName')
 		this.masterKey = this.$('masterKey')
 		this.serviceName = this.$('serviceName')
 		this.selectServices = this.$('selectServices')
+		this.breadcrumbs = this.$('breadcrumbs')
+		this.breadcrumbsCntxt = this.breadcrumbs.getContext('2d')
 		this.selectServices.onchange = function () {
 			let selected = this.options[this.selectedIndex]
 			that.serviceName.value = selected.dataset.name
@@ -202,30 +220,38 @@ Screens.addController('generate', {
 					event.preventDefault()
 					that.generate()
 				}
-		}
+			}
 
 		this.userName.onkeyup = this.updateHistoryList.bind(this)
 
 		// Give feedback about password strength
-		this.masterKey.onchange = function () {
-			let pass = this.value,
+		this.masterKey.onfocus = () => {
+			this.masterKey.className = ''
+			this.updateBreadcrumbs()
+		}
+		this.masterKey.onblur = () => {
+			let pass = this.masterKey.value,
 				score
 			if (pass.length < 4) {
-				this.className = ''
+				this.masterKey.className = ''
 			} else if (pass.length < 8) {
-				this.className = 'short'
+				this.masterKey.className = 'short'
 			} else {
 				score = measurePasswordStrength(pass)
 				if (score <= 32) {
-					this.className = 'weak'
+					this.masterKey.className = 'weak'
 				} else if (score <= 64) {
-					this.className = 'ok'
+					this.masterKey.className = 'ok'
 				} else if (score <= 96) {
-					this.className = 'great'
+					this.masterKey.className = 'great'
 				} else {
-					this.className = 'awesome'
+					this.masterKey.className = 'awesome'
 				}
 			}
+
+			let w = this.breadcrumbs.width,
+				h = this.breadcrumbs.height
+			this.breadcrumbsCntxt.clearRect(0, 0, w, h)
 		}
 
 		// Color buttons
@@ -234,9 +260,12 @@ Screens.addController('generate', {
 				that.setColor(event.currentTarget)
 			}
 		})
+
+		// Show breadcrumbs for password
+		this.masterKey.onkeyup = () => this.updateBreadcrumbs()
 	},
 	// options is an optional object with keys: color, serviceName
-	onbeforeshow (options) {
+	onbeforeshow(options) {
 		options = options || {}
 
 		// Reset fields
@@ -245,7 +274,7 @@ Screens.addController('generate', {
 		this.setColor(options.color ? this.$(options.color) : null)
 		this.serviceName.value = options.serviceName || ''
 	},
-	onaftershow () {
+	onaftershow() {
 		// Focus the best field
 		if (this.userName.value) {
 			this.masterKey.focus()
@@ -253,7 +282,7 @@ Screens.addController('generate', {
 			this.userName.focus()
 		}
 	},
-	onafterhide () {
+	onafterhide() {
 		this.masterKey.value = ''
 		this.masterKey.className = ''
 		this.serviceName.value = ''

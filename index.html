@@ -111,12 +111,13 @@
 						<br>
 						<span class="details">
 							<span>[[generate.masterKeyDetails]]</span>
-							<br>
-							<span class="button" id="get-help">[[generate.getHelp]]</span>
+						<br>
+						<span class="button" id="get-help">[[generate.getHelp]]</span>
 						</span>
 					</td>
 					<td>
-						<input id="masterKey" type="password" name="masterKey">
+						<input id="masterKey" type="password" name="masterKey"><br>
+						<canvas id="breadcrumbs" width="150" height="10"></canvas>
 					</td>
 				</tr>
 				<tr>
@@ -130,8 +131,8 @@
 						<br>
 						<span id="saved-services">
 							<span>[[generate.or]]</span>
-							<br>
-							<select id="selectServices">
+						<br>
+						<select id="selectServices">
 								<option disabled selected>[[generate.history]]</option>
 							</select>
 						</span>

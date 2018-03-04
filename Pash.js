@@ -118,20 +118,14 @@ Pash.normalize = function (str) {
  * @param {function(string)} callback execute with the result password
  */
 Pash.prototype.generatePassword = function (format, length, callback) {
-	let tag = String(Math.random())
-
-	Pash._worker.postMessage({
-		action: 'password',
+	Pash._runInWorker('password', {
 		masterPassword: this._masterPassword,
 		userName: this._userName,
 		serviceName: this._serviceName,
 		color: this._color,
 		format,
-		length,
-		tag
-	})
-
-	Pash._callbacks[tag] = callback
+		length
+	}, callback)
 }
 
 /**
@@ -154,17 +148,11 @@ Pash.prototype.generatePashKey = function (color, callback) {
  * @param {function(string)} callback
  */
 Pash.prototype.encrypt = function (plaintext, callback) {
-	let tag = String(Math.random())
-
-	Pash._worker.postMessage({
-		action: 'encrypt',
+	Pash._runInWorker('encrypt', {
 		masterPassword: this._masterPassword,
 		userName: this._userName,
-		plaintext,
-		tag
-	})
-
-	Pash._callbacks[tag] = callback
+		plaintext
+	}, callback)
 }
 
 /**
@@ -174,17 +162,11 @@ Pash.prototype.encrypt = function (plaintext, callback) {
  * @param {function(?string)} callback
  */
 Pash.prototype.decrypt = function (ciphertext, callback) {
-	let tag = String(Math.random())
-
-	Pash._worker.postMessage({
-		action: 'decrypt',
+	Pash._runInWorker('decrypt', {
 		masterPassword: this._masterPassword,
 		userName: this._userName,
-		ciphertext,
-		tag
-	})
-
-	Pash._callbacks[tag] = callback
+		ciphertext
+	}, callback)
 }
 
 /**
@@ -217,6 +199,35 @@ Pash.FORMAT = {
 	NUMERIC: 1,
 	STRONG: 2,
 	RAW: 3
+}
+
+/**
+ * @param {string} masterPassword - can be called in prefixes of the master key
+ * @param {function(Array<number>)} callback
+ */
+Pash.breadcrumbs = function (masterPassword, callback) {
+	Pash._runInWorker('breadcrumbs', {
+		masterPassword
+	}, callback)
+}
+
+/**
+ * @param {string} action
+ * @param {Object} [data]
+ * @param {function(*)} callback
+ * @private
+ */
+Pash._runInWorker = function (action, data, callback) {
+	if (!data) {
+		data = {}
+	}
+
+	let tag = String(Math.random())
+	data.tag = tag
+	data.action = action
+
+	Pash._worker.postMessage(data)
+	Pash._callbacks[tag] = callback
 }
 
 /**

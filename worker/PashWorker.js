@@ -1,8 +1,8 @@
-/* globals Pash, Module, importScripts, self, Util, Cipher*/
+/* globals Pash, Module, importScripts, self, Util, Cipher, Breadcrumbs */
 'use strict'
 
 // Import and bind pbkdf
-importScripts('pbkdf_min.js', 'Util.js', 'Cipher.js')
+importScripts('pbkdf_min.js', 'Util.js', 'Cipher.js', 'Breadcrumbs.js')
 
 /**
  * Implemented by https://github.com/sitegui/pbkdf-sha256-asm/
@@ -51,6 +51,8 @@ self.onmessage = function (event) {
 	} else if (data.action === 'decrypt') {
 		key = new Pash(data.masterPassword, data.userName, 'pash', 'red').getRawPassword()
 		result = Cipher.decrypt(key, data.ciphertext)
+	} else if (data.action === 'breadcrumbs') {
+		result = Breadcrumbs.generate(data.masterPassword, 3, 1)
 	}
 
 	self.postMessage({

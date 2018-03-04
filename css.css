@@ -2,6 +2,7 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
+
 html {
 	background-color: #CDF;
 	background-image: linear-gradient(#CF9, #CDF);
@@ -12,9 +13,11 @@ html {
 	width: 100%;
 	overflow-x: hidden;
 }
+
 .stage {
 	transition: height 1s ease;
 }
+
 .screen {
 	padding: 10px;
 	background-color: rgba(255, 255, 255, .5);
@@ -25,11 +28,13 @@ html {
 	left: 100%;
 	display: none;
 }
+
 h1,
 h2 {
 	color: #333;
 	text-transform: capitalize;
 }
+
 .big-button {
 	width: 75%;
 	margin: 20px auto;
@@ -41,9 +46,11 @@ h2 {
 	cursor: pointer;
 	text-transform: uppercase;
 }
+
 .big-button:hover {
 	background-color: #6B6;
 }
+
 .big-button:after {
 	content: ">";
 	position: relative;
@@ -51,16 +58,19 @@ h2 {
 	transition-property: left, color;
 	transition-duration: .5s;
 }
+
 .big-button:hover:after {
 	left: 20%;
 	color: rgba(0, 0, 0, .25);
 }
+
 footer {
 	font-size: smaller;
 	padding: 10px;
 	text-align: left;
 	margin-bottom: 10px;
 }
+
 .update-alert {
 	position: fixed;
 	top: 10px;
@@ -69,18 +79,22 @@ footer {
 	padding: 5px;
 	text-align: center;
 }
+
 .options {
 	position: absolute;
 	right: 20px;
 }
+
 .details {
 	font-size: smaller;
 }
+
 .more-info {
 	display: none;
 	background-color: rgba(128, 128, 128, .2);
 	padding: 10px;
 }
+
 .more-button,
 .button {
 	padding: 5px;
@@ -90,16 +104,20 @@ footer {
 	display: inline-block;
 	color: black;
 }
+
 .more-button:hover,
 .button:hover {
 	background-color: rgba(100, 100, 100, .6);
 }
+
 .more-button {
 	font-size: smaller;
 }
+
 .inline-button:hover {
 	background-color: rgba(100, 100, 100, .6);
 }
+
 ol,
 pre,
 ul {
@@ -107,19 +125,24 @@ ul {
 	display: inline-block;
 	margin: 0;
 }
+
 table {
 	margin: auto;
 }
+
 td {
 	padding: 5px;
 }
+
 input {
 	font-size: 16px;
 }
+
 .color-options {
 	transition: background-color .5s ease;
 	position: relative;
 }
+
 .color-option {
 	display: inline-block;
 	width: 30px;
@@ -130,36 +153,47 @@ input {
 	border-color: transparent;
 	border-style: solid;
 }
+
 .color-option-selected {
 	border-color: white;
 }
+
 .color-black {
 	background-color: rgba(0, 0, 0, .9);
 }
+
 .color-red {
 	background-color: rgba(255, 0, 0, .9);
 }
+
 .color-green {
 	background-color: rgba(0, 255, 0, .9);
 }
+
 .color-blue {
 	background-color: rgba(0, 0, 255, .9);
 }
+
 #masterKey.short {
 	border: medium rgba(255, 0, 0, .5) solid;
 }
+
 #masterKey.weak {
 	border: thick rgba(255, 0, 0, .5) solid;
 }
+
 #masterKey.ok {
 	border: medium rgba(255, 255, 0, .5) solid;
 }
+
 #masterKey.great {
 	border: medium rgba(0, 255, 0, .5) solid;
 }
+
 #masterKey.awesome {
 	border: medium rgba(0, 0, 255, .5) solid;
 }
+
 .result {
 	font-size: larger;
 	padding: 15px 50px;
@@ -167,14 +201,17 @@ input {
 	background-color: #6B6;
 	margin: 5px;
 }
+
 .result::-moz-selection {
 	color: rgba(0, 0, 0, .1);
 	background-color: rgba(255, 255, 255, .5);
 }
+
 .result::selection {
 	color: rgba(0, 0, 0, .1);
 	background-color: rgba(255, 255, 255, .5);
 }
+
 .go-back {
 	width: 25%;
 	margin: 15px 7%;
@@ -186,9 +223,11 @@ input {
 	text-transform: uppercase;
 	position: relative;
 }
+
 .go-back:hover {
 	background-color: #666;
 }
+
 .go-back:before {
 	content: "<";
 	position: relative;
@@ -196,10 +235,12 @@ input {
 	transition-property: right, color;
 	transition-duration: .5s;
 }
+
 .go-back:hover:before {
 	right: 20%;
 	color: rgba(0, 0, 0, .25);
 }
+
 .button-right {
 	float: right;
 	width: 20%;
@@ -209,9 +250,11 @@ input {
 	cursor: pointer;
 	text-transform: uppercase;
 }
+
 .button-right:hover {
 	background-color: #666;
 }
+
 .option {
 	background-color: rgba(255, 255, 255, .5);
 	padding: 10px;
@@ -221,13 +264,16 @@ input {
 	border-style: solid;
 	border-color: transparent;
 }
+
 .option:hover {
 	background-color: #EEE;
 }
+
 .option-selected {
 	border-color: gray;
 	background-color: #DDD;
 }
+
 .alert {
 	color: #600;
 	display: inline-block;

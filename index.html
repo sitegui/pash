@@ -73,7 +73,8 @@
 			<p>[[createMasterKey.line2]]</p>
 			<div class="button" id="show-helper">[[createMasterKey.help]]</div>
 			<div class="more-info" id="helper">
-				<p><span>[[createMasterKey.password]]</span>
+				<p>
+					<span>[[createMasterKey.password]]</span>
 					<input id="password" type="password" size="40">
 					<label>
 						<input type="checkbox" id="show-password">
@@ -93,40 +94,52 @@
 			<h1>[[generate.title]]</h1>
 			<table>
 				<tr>
-					<td><strong>[[generate.name]]</strong>
-						<br><span class="details">[[generate.nameDetails]]</span>
+					<td>
+						<strong>[[generate.name]]</strong>
+						<br>
+						<span class="details">[[generate.nameDetails]]</span>
 					</td>
 					<td>
 						<input id="userName" name="userName">
 					</td>
 				</tr>
 				<tr>
-					<td><strong>[[generate.masterKey]]</strong>
-						<br><span class="details"><span>[[generate.masterKeyDetails]]</span>
-						<br><span class="button" id="get-help">[[generate.getHelp]]</span></span>
+					<td>
+						<strong>[[generate.masterKey]]</strong>
+						<br>
+						<span class="details">
+							<span>[[generate.masterKeyDetails]]</span>
+							<br>
+							<span class="button" id="get-help">[[generate.getHelp]]</span>
+						</span>
 					</td>
 					<td>
 						<input id="masterKey" type="password" name="masterKey">
 					</td>
 				</tr>
 				<tr>
-					<td><strong>[[generate.service]]</strong>
-						<br><span class="details">[[generate.serviceDetails]]</span>
+					<td>
+						<strong>[[generate.service]]</strong>
+						<br>
+						<span class="details">[[generate.serviceDetails]]</span>
 					</td>
 					<td>
 						<input id="serviceName" name="serviceName">
 						<br>
-						<span id="saved-services"><span>[[generate.or]]</span>
-						<br>
-						<select id="selectServices">
-							<option disabled selected>[[generate.history]]</option>
-						</select>
+						<span id="saved-services">
+							<span>[[generate.or]]</span>
+							<br>
+							<select id="selectServices">
+								<option disabled selected>[[generate.history]]</option>
+							</select>
 						</span>
 					</td>
 				</tr>
 				<tr>
-					<td><strong>[[generate.color.title]]</strong>
-						<br><span class="details">[[generate.colorDetails]]</span>
+					<td>
+						<strong>[[generate.color.title]]</strong>
+						<br>
+						<span class="details">[[generate.colorDetails]]</span>
 					</td>
 					<td class="color-options" id="color-options">
 						<div class="color-option color-red" id="red" data-css-color="rgba(255, 0, 0, .5)"></div>
@@ -146,7 +159,8 @@
 			<h1>[[changeMasterKey.title]]</h1>
 			<p>[[changeMasterKey.line1]]</p>
 			<p>
-				<div class="button" id="try-again">[[changeMasterKey.tryAgain]]</div><span>[[changeMasterKey.or]]</span>
+				<div class="button" id="try-again">[[changeMasterKey.tryAgain]]</div>
+				<span>[[changeMasterKey.or]]</span>
 				<div class="button" id="its-ok">[[changeMasterKey.ok]]</div>
 			</p>
 			<p>
@@ -154,7 +168,11 @@
 			</p>
 			<div class="more-info" id="info">
 				<p>[[changeMasterKey.info.line1]]</p>
-				<p><span>[[changeMasterKey.info.line2A]]</span><code id="current"></code><span>[[changeMasterKey.info.line2B]]</span><code id="new"></code>
+				<p>
+					<span>[[changeMasterKey.info.line2A]]</span>
+					<code id="current"></code>
+					<span>[[changeMasterKey.info.line2B]]</span>
+					<code id="new"></code>
 				</p>
 			</div>
 		</div>
@@ -166,12 +184,14 @@
 			<p>[[result.line2]]</p>
 			<div class="more-button" id="more-button">[[result.changeFormat]]</div>
 			<div id="more-info">
-				<p><strong>[[result.format]]</strong>:
+				<p>
+					<strong>[[result.format]]</strong>:
 					<span class="option" id="format-standard" data-id="0">[[result.standard]]</span>
 					<span class="option" id="format-numeric" data-id="1">[[result.numeric]]</span>
 					<span class="option" id="format-strong" data-id="2">[[result.stronger]]</span>
 				</p>
-				<p><strong>[[result.length]]</strong>:
+				<p>
+					<strong>[[result.length]]</strong>:
 					<span class="option" id="length-short" data-id="1">[[result.short]]</span>
 					<span class="option" id="length-medium" data-id="2">[[result.medium]]</span>
 					<span class="option" id="length-long" data-id="3">[[result.long]]</span>
@@ -191,7 +211,8 @@
 		<div class="screen" id="screen-options">
 			<h1>[[options.title]]</h1>
 			<p class="button" id="clear">[[options.clear]]</p>
-			<p><span>[[options.language]]</span>
+			<p>
+				<span>[[options.language]]</span>
 				<select id="language"></select>
 			</p>
 			<div class="go-back" id="home">[[options.home]]</div>

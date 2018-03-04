@@ -138,8 +138,20 @@ Lang.addPack({
 			home: 'Início',
 			clear: 'Limpar todos meus dados',
 			confirmClear: 'Isso irá excluir todos seus dados salvos (seu nome e os serviços usados).\nTem certeza?',
-			installError: 'Essa função só está disponível no Firefox (desktop ou Android)',
-			language: 'Língua: '
+			language: 'Língua: ',
+			backup: 'Guardar cópia dos dados',
+			restore: 'Restaurar de uma cópia'
+		},
+		backup: {
+			title: 'Salvar dados',
+			text: 'Copie o texto abaixo e guarde-o em algum local seguro. Você poderar restaurar seus dados a qualquer momento, porém você ainda precisará lembrar de sua senha mestra, pois ela não fica salva com PASH',
+			back: 'Voltar'
+		},
+		restore: {
+			title: 'Restaurar dados',
+			text: 'Cole abaixo o texto que você deixou salvo',
+			back: 'Voltar',
+			restore: 'Restaurar'
 		},
 		update: {
 			text: 'Nova versão disponível',

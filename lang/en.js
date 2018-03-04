@@ -139,8 +139,20 @@ Lang.addPack({
 			home: 'Home',
 			clear: 'Clear all my data',
 			confirmClear: 'This will clear all you saved data (your name and your services).\nAre you sure?',
-			installError: 'This function is only available in Firefox (Desktop or Android)',
-			language: 'Language: '
+			language: 'Language: ',
+			backup: 'Backup my data',
+			restore: 'Restore from a backup'
+		},
+		backup: {
+			title: 'Backup data',
+			text: 'Copy and save the text below somewhere safe. You can restore it back at any time, but you will have to remember your secret master key since it is not kept by PASH',
+			back: 'Back'
+		},
+		restore: {
+			title: 'Restore data',
+			text: 'Paste the backup text you\'ve saved',
+			back: 'Back',
+			restore: 'Restore'
 		},
 		update: {
 			text: 'New version available',

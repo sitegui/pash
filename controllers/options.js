@@ -2,17 +2,24 @@
 'use strict'
 
 Screens.addController('options', {
-	oninit () {
+	oninit() {
 		this.$('home').onclick = function () {
 			Screens.show('generate', null, true)
 		}
 
-		// Set footer buttons
 		this.$('clear').onclick = function () {
 			if (confirm(_('options.confirmClear'))) {
 				Storage.reset()
 				location.reload(false)
 			}
+		}
+
+		this.$('backup').onclick = () => {
+			Screens.show('backup')
+		}
+
+		this.$('restore').onclick = () => {
+			Screens.show('restore')
 		}
 
 		// Populate language options

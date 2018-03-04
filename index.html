@@ -19,6 +19,8 @@
 	<script src="controllers/generate.js"></script>
 	<script src="controllers/credits.js"></script>
 	<script src="controllers/options.js"></script>
+	<script src="controllers/backup.js"></script>
+	<script src="controllers/restore.js"></script>
 	<script src="lang/Lang.js"></script>
 	<script src="lang/en.js"></script>
 	<script src="lang/pt-br.js"></script>
@@ -210,12 +212,31 @@
 
 		<div class="screen" id="screen-options">
 			<h1>[[options.title]]</h1>
-			<p class="button" id="clear">[[options.clear]]</p>
+			<p>
+				<span class="button" id="backup">[[options.backup]]</span>
+				<span class="button" id="restore">[[options.restore]]</span>
+			</p>
+			<span class="button" id="clear">[[options.clear]]</span>
 			<p>
 				<span>[[options.language]]</span>
 				<select id="language"></select>
 			</p>
 			<div class="go-back" id="home">[[options.home]]</div>
+		</div>
+
+		<div class="screen" id="screen-backup">
+			<h1>[[backup.title]]</h1>
+			<p>[[backup.text]]</p>
+			<textarea id="textarea" readonly></textarea>
+			<div class="go-back" id="back">[[backup.back]]</div>
+		</div>
+
+		<div class="screen" id="screen-restore">
+			<h1>[[restore.title]]</h1>
+			<p>[[restore.text]]</p>
+			<textarea id="textarea"></textarea>
+			<div class="big-button" id="restore">[[restore.restore]]</div>
+			<div class="go-back" id="back">[[restore.back]]</div>
 		</div>
 
 	</div>

@@ -124,7 +124,8 @@ Lang.addPack({
 			short: 'curto',
 			medium: 'médio',
 			long: 'longo',
-			back: 'Voltar'
+			back: 'Voltar',
+			notes: 'Você pode anotar abaixo algo útil para o futuro'
 		},
 		credits: {
 			title: 'Créditos',

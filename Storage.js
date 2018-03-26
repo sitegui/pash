@@ -42,7 +42,9 @@ Storage.reset = function () {
 					// the number of times this service was used
 					hitCount: 'int',
 					// the selected output length (see Pash.LENGTH)
-					length: 'int'
+					length: 'int',
+					// additional notes
+					'notes?': String
 				}]
 			}
 		},

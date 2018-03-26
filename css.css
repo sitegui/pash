@@ -290,3 +290,8 @@ input[type=password] {
 	resize: none;
 	height: 10em;
 }
+
+#screen-result #result-notes {
+	width: 50%;
+	height: 5em;
+}

@@ -13,7 +13,7 @@ Screens.addController('result', {
 	length: null,
 
 	// Set the selected format as the given element
-	setFormat (value) {
+	setFormat(value) {
 		if (this.format) {
 			this.format.classList.remove('option-selected')
 		}
@@ -22,7 +22,7 @@ Screens.addController('result', {
 	},
 
 	// Set the selected length as the given element
-	setLength (value) {
+	setLength(value) {
 		if (this.length) {
 			this.length.classList.remove('option-selected')
 		}
@@ -30,7 +30,7 @@ Screens.addController('result', {
 		this.length.classList.add('option-selected')
 	},
 
-	updateResult () {
+	updateResult() {
 		let format = Number(this.format.dataset.id),
 			length = Number(this.length.dataset.id),
 			that = this
@@ -39,7 +39,7 @@ Screens.addController('result', {
 		})
 	},
 
-	oninit () {
+	oninit() {
 		let that = this
 
 		this.$('back').onclick = function () {
@@ -64,7 +64,7 @@ Screens.addController('result', {
 				that.data.service.format = Number(that.format.dataset.id)
 				Storage.save()
 				that.updateResult()
-		}
+			}
 		this.$('length-short').onclick =
 			this.$('length-medium').onclick =
 			this.$('length-long').onclick = function (event) {
@@ -72,10 +72,20 @@ Screens.addController('result', {
 				that.data.service.length = Number(that.length.dataset.id)
 				Storage.save()
 				that.updateResult()
+			}
+
+		this.$('result-notes').onchange = function (event) {
+			let notes = event.currentTarget.value
+			if (notes) {
+				that.data.service.notes = notes
+			} else {
+				delete that.data.service.notes
+			}
+			Storage.save()
 		}
 	},
 	// data is an object: {pash: Pash, userName: string, service: service, cssColor: string}
-	onbeforeshow (data) {
+	onbeforeshow(data) {
 		this.data = data
 
 		if (data.service.format === Pash.FORMAT.NUMERIC) {
@@ -100,6 +110,7 @@ Screens.addController('result', {
 		this.$('result').style.backgroundColor = data.cssColor
 		this.$('more-info').style.display = 'none'
 		this.$('more-button').style.display = ''
+		this.$('result-notes').value = data.service.notes || ''
 		this.updateResult()
 
 		// Display timeout (for security reasons)
@@ -107,10 +118,10 @@ Screens.addController('result', {
 			Screens.show('generate', null, true)
 		}, 60e3)
 	},
-	onbeforehide () {
-		clearTimeout(this.interval)
+	onbeforehide() {
+		clearTimeout(this.timeout)
 	},
-	onafterhide () {
+	onafterhide() {
 		this.data = null
 		this.$('result').textContent = ''
 	}

@@ -125,7 +125,8 @@ Lang.addPack({
 			short: 'short',
 			medium: 'medium',
 			long: 'long',
-			back: 'Back'
+			back: 'Back',
+			notes: 'You can write notes for your future self below'
 		},
 		credits: {
 			title: 'Credits',

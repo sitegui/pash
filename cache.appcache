@@ -1,7 +1,7 @@
 CACHE MANIFEST
 
 # Pash
-# Version 3.0.0
+# Version 3.0.1
 # Guilherme de Oliveira Souza
 # https://sitegui.com.br
 
@@ -20,6 +20,7 @@ controllers/credits.js
 controllers/generate.js
 controllers/how.js
 controllers/options.js
+controllers/restore.js
 controllers/result.js
 controllers/welcome.js
 lang/en.js

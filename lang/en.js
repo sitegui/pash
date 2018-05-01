@@ -156,10 +156,6 @@ Lang.addPack({
 			back: 'Back',
 			restore: 'Restore'
 		},
-		update: {
-			text: 'New version available',
-			button: 'Update now'
-		},
 		localStorageError: 'Could not open saved data, try updating this page.\nIf this problem persists, clear the browser cache'
 	}
 })

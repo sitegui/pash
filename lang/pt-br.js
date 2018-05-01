@@ -155,10 +155,6 @@ Lang.addPack({
 			back: 'Voltar',
 			restore: 'Restaurar'
 		},
-		update: {
-			text: 'Nova versão disponível',
-			button: 'Atualizar agora'
-		},
 		localStorageError: 'Não foi possível carregar seus dados, tente atualizar essa página.\nSe o problema persistir, limpe o cache do navegador'
 	}
 })
